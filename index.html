@@ -15,28 +15,48 @@
 
         /* Main App */
         #main-app { display: none; width: 100%; display: flex; }
-        .sidebar { width: 220px; background-color: var(--navy); color: white; padding: 20px; }
-        .sidebar h2 { color: var(--gold); }
-        .sidebar a { display: block; color: white; padding: 15px 0; text-decoration: none; font-weight: bold; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar a:hover { color: var(--gold); }
-        .content { flex-grow: 1; padding: 40px; }
+        .sidebar { width: 240px; background-color: var(--navy); color: white; padding: 20px; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+        .sidebar h2 { color: var(--gold); font-size: 22px; margin-bottom: 30px; }
+        .sidebar a { display: block; color: white; padding: 15px 10px; text-decoration: none; font-weight: bold; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 6px; transition: 0.3s; }
+        .sidebar a:hover { background: rgba(255,215,0,0.15); color: var(--gold); padding-left: 15px; }
+        .content { flex-grow: 1; padding: 40px; overflow-y: auto; }
         
         .section { display: none; }
         .active { display: block; }
         
-        /* Dashboard Styling */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-right: 5px solid var(--gold); }
-        .stat-card h3 { margin: 0; color: var(--navy); }
-        .stat-number { font-size: 24px; font-weight: bold; margin-top: 10px; }
+        /* Dashboard Styling (Persian & Motivational Theme) */
+        .dashboard-container { direction: rtl; }
+        .hero-banner { 
+            background: linear-gradient(rgba(26, 42, 108, 0.85), rgba(26, 42, 108, 0.85)), url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1200&q=80'); 
+            background-size: cover; background-position: center; 
+            color: white; padding: 40px; border-radius: 15px; margin-bottom: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); position: relative; overflow: hidden;
+        }
+        .hero-banner h1 { margin: 0 0 10px 0; color: var(--gold); font-size: 28px; }
+        .hero-banner p { margin: 0; font-size: 16px; opacity: 0.9; }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid var(--gold); position: relative; }
+        .stat-card h3 { margin: 0; color: var(--navy); font-size: 15px; }
+        .stat-number { font-size: 32px; font-weight: bold; margin-top: 10px; color: #2c3e50; }
+        .stat-icon { position: absolute; left: 20px; top: 20px; font-size: 28px; opacity: 0.2; }
+
+        .goal-progress-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .goal-header h3 { margin: 0; color: var(--navy); }
+        .goal-badge { background: var(--gold); color: var(--navy); padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
         
-        .progress-container { background: white; padding: 25px; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .progress-bar-bg { background: #eee; height: 20px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
-        .progress-bar-fill { background: var(--gold); height: 100%; width: 65%; } /* مقدار پیشرفت */
+        .steps-road { display: flex; align-items: center; justify-content: space-between; margin: 25px 0; position: relative; }
+        .step-item { text-align: center; z-index: 2; }
+        .step-circle { width: 45px; height: 45px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; color: #555; }
+        .step-item.completed .step-circle { background: var(--navy); color: var(--gold); box-shadow: 0 0 10px rgba(26,42,108,0.4); }
+        .step-item.active-step .step-circle { background: var(--gold); color: var(--navy); border: 3px solid var(--navy); transform: scale(1.1); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: right; }
+        /* Table Styling for Todo & IDP */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); direction: ltr; }
+        th, td { padding: 14px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
         th { background-color: var(--navy); color: white; }
+        tr:hover { background-color: #f9f9f9; }
     </style>
 </head>
 <body>
@@ -53,45 +73,95 @@
 <div id="main-app">
     <div class="sidebar">
         <h2>My Planner</h2>
-        <a onclick="showSection('dashboard')">داشبورد</a>
-        <a onclick="showSection('todo')">تسک‌ها</a>
-        <a onclick="showSection('idp')">برنامه توسعه فردی</a>
+        <a onclick="showSection('dashboard')">Dashboard</a>
+        <a onclick="showSection('todo')">Todo Diurnus</a>
+        <a onclick="showSection('idp')">My IDP Template</a>
     </div>
 
     <div class="content">
-        <!-- Dashboard -->
-        <div id="dashboard" class="section active">
-            <h2 style="color:var(--navy)">خوش آمدید، مدیر عزیز!</h2>
-            <div class="dashboard-grid">
-                <div class="stat-card"><h3>تسک‌های فعال امروز</h3><div class="stat-number">۸</div></div>
-                <div class="stat-card"><h3>تسک‌های تکمیل شده</h3><div class="stat-number">۱۲</div></div>
-                <div class="stat-card"><h3>اهداف IDP در مسیر</h3><div class="stat-number">۴</div></div>
+        <!-- Dashboard (Persian & Motivational Theme with Book Stairs) -->
+        <div id="dashboard" class="section active dashboard-container">
+            <div class="hero-banner">
+                <h1>خوش آمدید، مدیر عزیز! 🚀</h1>
+                <p>امروز، هر پله‌ای که از کتاب دانش بالا می‌روی، تو را به قله‌ی هدف و موفقیت نزدیک‌تر می‌کند.</p>
             </div>
-            
-            <div class="progress-container">
-                <h3>وضعیت پیشرفت کلی اهداف</h3>
-                <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
-                <p>۶۵٪ از مسیر هدف‌گذاری ماهانه طی شده است.</p>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>تسک‌های فعال امروز</h3>
+                    <div class="stat-number">۸</div>
+                    <div class="stat-icon">📋</div>
+                </div>
+                <div class="stat-card">
+                    <h3>تسک‌های تکمیل شده</h3>
+                    <div class="stat-number" style="color: #27ae60;">۱۲</div>
+                    <div class="stat-icon">✅</div>
+                </div>
+                <div class="stat-card">
+                    <h3>اهداف IDP در مسیر</h3>
+                    <div class="stat-number" style="color: #e67e22;">۴</div>
+                    <div class="stat-icon">📈</div>
+                </div>
+            </div>
+
+            <div class="goal-progress-card">
+                <div class="goal-header">
+                    <h3>مسیر توسعه فردی (پله‌های دانش تا هدف)</h3>
+                    <div class="goal-badge">🎯 ۶۵٪ پیشرفت کلی</div>
+                </div>
+                
+                <!-- Book Stairs / Goal Road Aesthetic -->
+                <div class="steps-road">
+                    <div class="step-item completed">
+                        <div class="step-circle">📚 ۱</div>
+                        <span style="font-size: 12px; font-weight: bold;">مطالعه پایه</span>
+                    </div>
+                    <div class="step-item completed">
+                        <div class="step-circle">📚 ۲</div>
+                        <span style="font-size: 12px; font-weight: bold;">مهارت‌آموزی</span>
+                    </div>
+                    <div class="step-item active-step">
+                        <div class="step-circle">⭐ ۳</div>
+                        <span style="font-size: 12px; font-weight: bold;">اجرای تخصصی</span>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-circle">🏆 ۴</div>
+                        <span style="font-size: 12px; color: #888;">قله هدف نهایی</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Todo -->
+        <!-- Todo (English) -->
         <div id="todo" class="section">
-            <h2 style="color:var(--navy)">تسک‌های روزانه (Todo Diurnus)</h2>
+            <h2 style="color:var(--navy)">Todo Diurnus</h2>
             <table>
-                <thead><tr><th>نام تسک</th><th>توضیحات</th><th>ددلاین</th><th>وضعیت</th><th>انجام شد</th></tr></thead>
-                <tbody><tr><td>گزارش KPI</td><td>آماده‌سازی فایل عملکرد</td><td>۱۴۰۵-۰۷-۰۳</td><td>در حال انجام</td><td><input type="checkbox"></td></tr></tbody>
+                <thead>
+                    <tr><th>Task Name</th><th>Description</th><th>Deadline</th><th>Status</th><th>Done</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>KPI Report</td><td>Prepare performance tracking sheet</td><td>2026-09-25</td><td>In Progress</td><td><input type="checkbox"></td></tr>
+                </tbody>
             </table>
         </div>
 
-        <!-- IDP -->
+        <!-- IDP (English) -->
         <div id="idp" class="section">
-            <h2 style="color:var(--navy)">برنامه توسعه فردی (IDP)</h2>
+            <h2 style="color:var(--navy)">My IDP Template</h2>
             <table>
                 <thead>
-                    <tr><th>وظایف سرپرست</th><th>ویژگی‌های سرپرست</th><th>توانایی‌های من</th><th>دسترسی‌ها</th><th>منابع</th><th>ددلاین</th><th>اقدام اجرایی</th><th>وضعیت نهایی</th></tr>
+                    <tr>
+                        <th>Supervisor's Duties</th><th>Supervisor Characteristics</th><th>Qualities I Possess</th>
+                        <th>Accessing other features</th><th>Usable resources</th><th>Deadline</th>
+                        <th>Executive action</th><th>Final status</th>
+                    </tr>
                 </thead>
-                <tbody><tr><td>مدیریت تیم</td><td>رهبر</td><td>تحلیل‌گر</td><td>فراهم است</td><td>اسناد</td><td>اکتبر ۲۰۲۶</td><td>آموزش</td><td><input type="checkbox"></td></tr></tbody>
+                <tbody>
+                    <tr>
+                        <td>Manage Team</td><td>Leader</td><td>Analytical</td><td>Available</td><td>Docs/Data</td><td>Oct 2026</td><td>Training</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
