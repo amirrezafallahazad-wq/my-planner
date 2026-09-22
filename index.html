@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amirreza's Planner</title>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --navy-deep: #0b132b;
             --navy: #1c2541;
             --navy-light: #3a506b;
             --gold: #f5b041;
+            --gold-bright: #f39c12;
             --emerald: #10b981;
             --light-bg: #f8fafc;
             --card-border: #e2e8f0;
@@ -30,10 +33,7 @@
         /* ------------------ LOGIN SCREEN ------------------ */
         #login-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
             background: radial-gradient(circle at center, #243b82 0%, #0b132b 100%);
             display: flex;
             flex-direction: column;
@@ -67,10 +67,6 @@
             font-size: 14px;
             outline: none;
         }
-        .login-box input:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(245, 176, 65, 0.3);
-        }
         .login-btn {
             width: 100%;
             background: linear-gradient(135deg, #f5b041, #e67e22);
@@ -91,7 +87,7 @@
 
         /* ------------------ MAIN LAYOUT ------------------ */
         #main-app {
-            display: flex;
+            display: none;
             width: 100%;
             min-height: 100vh;
         }
@@ -139,28 +135,18 @@
         .section { display: none; }
         .section.active { display: block; }
 
-        /* ------------------ DASHBOARD ------------------ */
+        /* Dashboard elements */
         .dashboard-header {
             background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
             padding: 28px 32px;
             border-radius: 16px;
             color: white;
             margin-bottom: 25px;
-            box-shadow: 0 10px 25px rgba(26, 42, 108, 0.15);
             border-left: 6px solid var(--gold);
         }
-        .dashboard-header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .dashboard-header p {
-            margin: 6px 0 0 0;
-            color: #cbd5e1;
-            font-size: 14px;
-        }
+        .dashboard-header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        .dashboard-header p { margin: 6px 0 0 0; color: #cbd5e1; font-size: 14px; }
 
-        /* Stat Cards */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -173,7 +159,6 @@
             padding: 22px 24px;
             border-radius: 14px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -182,162 +167,72 @@
         .stat-card.card-active { border-top-color: #3b82f6; }
         .stat-card.card-completed { border-top-color: #10b981; }
         .stat-card.card-idp { border-top-color: var(--gold); }
+        .stat-title { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
+        .stat-value { font-size: 30px; font-weight: 800; color: var(--navy-deep); }
 
-        .stat-info { text-align: right; }
-        .stat-title {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-        .stat-value {
-            font-size: 30px;
-            font-weight: 800;
-            color: var(--navy-deep);
-            line-height: 1;
-        }
-
-        .stat-badge-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-active .stat-badge-icon { background: #eff6ff; color: #2563eb; }
-        .card-completed .stat-badge-icon { background: #ecfdf5; color: #059669; }
-        .card-idp .stat-badge-icon { background: #fffbeb; color: #d97706; }
-        .stat-badge-icon svg { width: 28px; height: 28px; }
-
-        /* Panels */
         .card-panel {
             background: white;
             border-radius: 16px;
             padding: 24px 28px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
             margin-bottom: 25px;
         }
 
-        /* Daily Overview */
+        /* Daily Progress */
         .daily-overview-panel { direction: ltr; }
-        .daily-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .daily-header h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--navy-deep);
-        }
-        .daily-badge {
-            background: #eff6ff;
-            color: #2563eb;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid #dbeafe;
-        }
-        .daily-sub {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-        .progress-track {
-            width: 100%;
-            height: 12px;
-            background: #f1f5f9;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 20px;
-            background: linear-gradient(90deg, #3b82f6, #6366f1);
-            transition: width 0.5s ease;
-        }
+        .daily-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .daily-header h2 { margin: 0; font-size: 18px; font-weight: 700; color: var(--navy-deep); }
+        .daily-badge { background: #eff6ff; color: #2563eb; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 20px; }
+        .progress-track { width: 100%; height: 12px; background: #f1f5f9; border-radius: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; border-radius: 20px; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width 0.4s ease; }
 
         /* IDP Stairs */
         .idp-panel { direction: rtl; }
-        .idp-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .idp-header h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--navy-deep);
-        }
-        .idp-badge {
-            background: #fffbeb;
-            color: #b45309;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid #fef3c7;
-        }
-
         .stairs-canvas {
             width: 100%;
             height: 270px;
             background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 14px;
-            border: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 15px;
         }
 
-        .idp-summary-box {
-            margin-top: 20px;
-            background: #ffffff;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            padding: 16px 20px;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 15px;
-            align-items: center;
-        }
-        .summary-item {
+        /* Action Buttons and Inputs */
+        .action-bar {
             display: flex;
-            align-items: center;
             gap: 12px;
-        }
-        .summary-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
+            margin-bottom: 18px;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            flex-wrap: wrap;
         }
-        .summary-text h4 {
-            margin: 0;
-            font-size: 14px;
-            color: var(--navy-deep);
-            font-weight: 700;
+        .action-input {
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
         }
-        .summary-text p {
-            margin: 4px 0 0 0;
+        .btn-action {
+            background: var(--navy);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-action:hover { background: var(--navy-light); }
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 12px;
-            color: var(--text-muted);
         }
 
         /* Tables */
@@ -347,9 +242,8 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             border: 1px solid var(--card-border);
-            margin-top: 15px;
+            margin-top: 10px;
         }
         th, td {
             padding: 14px 18px;
@@ -357,47 +251,28 @@
             font-size: 14px;
             border-bottom: 1px solid #f1f5f9;
         }
-        th {
-            background-color: var(--navy);
-            color: white;
-            font-weight: 600;
-        }
-        tr:last-child td { border-bottom: none; }
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
+        th { background-color: var(--navy); color: white; }
     </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="login-screen">
     <div class="login-box">
         <h2>Login to Amirreza's Planner</h2>
-        <input type="text" id="username" placeholder="Username" autocomplete="off">
-        <input type="password" id="password" placeholder="Password">
-        <button type="button" id="loginBtn" class="login-btn">Log In</button>
+        <input type="text" id="username" placeholder="Username" value="Amirreza">
+        <input type="password" id="password" placeholder="Password" value="123456">
+        <button type="button" class="login-btn" onclick="doLogin()">Log In</button>
     </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="main-app">
     <div class="sidebar">
         <div class="brand-title">My Planner</div>
-        <a id="nav-dashboard" class="active-link" onclick="showSection('dashboard')">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            Dashboard
-        </a>
-        <a id="nav-todo" onclick="showSection('todo')">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-            Todo Diurnus
-        </a>
-        <a id="nav-idp" onclick="showSection('idp')">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            My IDP Template
-        </a>
+        <a id="nav-dashboard" class="active-link" onclick="openTab('dashboard')">Dashboard</a>
+        <a id="nav-todo" onclick="openTab('todo')">Todo Diurnus</a>
+        <a id="nav-idp" onclick="openTab('idp')">My IDP Template</a>
     </div>
 
     <div class="content">
@@ -408,338 +283,236 @@
                 <p>Personal performance overview and goals roadmap.</p>
             </div>
 
-            <!-- Stat Cards -->
             <div class="stat-grid">
                 <div class="stat-card card-active">
-                    <div class="stat-info">
+                    <div>
                         <div class="stat-title">تسک‌های فعال امروز</div>
                         <div class="stat-value" id="stat-active">0</div>
                     </div>
-                    <div class="stat-badge-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                    </div>
                 </div>
-
                 <div class="stat-card card-completed">
-                    <div class="stat-info">
+                    <div>
                         <div class="stat-title">تسک‌های تکمیل شده</div>
                         <div class="stat-value" id="stat-done">0</div>
                     </div>
-                    <div class="stat-badge-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    </div>
                 </div>
-
                 <div class="stat-card card-idp">
-                    <div class="stat-info">
+                    <div>
                         <div class="stat-title">اهداف IDP در مسیر</div>
                         <div class="stat-value" id="stat-idp">0</div>
                     </div>
-                    <div class="stat-badge-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                    </div>
                 </div>
             </div>
 
-            <!-- Panel 1: Daily Overview -->
             <div class="card-panel daily-overview-panel">
                 <div class="daily-header">
                     <h2>Daily Overview</h2>
-                    <span class="daily-badge" id="daily-percent-tag">0% Completed</span>
-                </div>
-                <div class="daily-sub">
-                    <span>Task Completion Rate</span>
-                    <span id="daily-count-text">0 of 0 Tasks</span>
+                    <span class="daily-badge" id="daily-badge">0% Completed</span>
                 </div>
                 <div class="progress-track">
-                    <div id="daily-progress-bar" class="progress-fill"></div>
+                    <div id="daily-bar" class="progress-fill"></div>
                 </div>
             </div>
 
-            <!-- Panel 2: IDP Book Stairs Roadmap -->
             <div class="card-panel idp-panel">
-                <div class="idp-header">
-                    <h2>پلکان توسعه فردی (IDP) و نقشه دستیابی به هدف</h2>
-                    <span class="idp-badge" id="idp-position-tag">در حال محاسبه...</span>
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <h2 style="margin:0; font-size:18px;">پلکان توسعه فردی (IDP)</h2>
+                    <span style="font-weight:bold; color:var(--navy);" id="idp-state-text">گام 1</span>
                 </div>
                 <div class="stairs-canvas">
-                    <svg id="idp-stairs-svg" viewBox="0 0 920 270" width="100%" height="100%" style="overflow:visible;"></svg>
-                </div>
-                
-                <div class="idp-summary-box">
-                    <div class="summary-item">
-                        <div class="summary-icon" style="background:#eff6ff; color:#2563eb;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                        </div>
-                        <div class="summary-text" id="idp-current-info">
-                            <h4>مرحله جاری: -</h4>
-                            <p>مهلت اقدام: -</p>
-                        </div>
-                    </div>
-                    <div class="summary-item" style="border-right: 1px solid #f1f5f9; padding-right:15px;">
-                        <div class="summary-icon" style="background:#ecfdf5; color:#059669;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        </div>
-                        <div class="summary-text" id="idp-stats-info">
-                            <h4>۰ گام تکمیل شده</h4>
-                            <p>از کل مراحل تعریف شده</p>
-                        </div>
-                    </div>
+                    <svg id="stairs-svg" viewBox="0 0 900 260" width="100%" height="100%"></svg>
                 </div>
             </div>
         </div>
 
-        <!-- Todo Section -->
+        <!-- Todo -->
         <div id="todo" class="section">
-            <h2 style="color:var(--navy); margin-top:0;">Todo Diurnus</h2>
+            <h2 style="color:var(--navy);">Todo Diurnus</h2>
+            <div class="action-bar">
+                <input type="text" id="new-todo-title" class="action-input" placeholder="Task Name">
+                <input type="text" id="new-todo-desc" class="action-input" placeholder="Description">
+                <input type="date" id="new-todo-date" class="action-input">
+                <button class="btn-action" onclick="addTodo()">+ Add Task</button>
+            </div>
             <table>
                 <thead>
-                    <tr><th>Task Name</th><th>Description</th><th>Deadline</th><th>Status</th><th>Done</th></tr>
+                    <tr><th>Task Name</th><th>Description</th><th>Deadline</th><th>Done</th><th>Action</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td>KPI Report</td><td>Prepare performance tracking sheet</td><td>2026-09-25</td><td>In Progress</td><td><input type="checkbox"></td></tr>
-                    <tr><td>Review IDP</td><td>Analyze supervisory competencies</td><td>2026-09-28</td><td>Pending</td><td><input type="checkbox"></td></tr>
-                    <tr><td>Team Standup</td><td>Weekly operations sync</td><td>2026-09-23</td><td>Done</td><td><input type="checkbox" checked></td></tr>
-                    <tr><td>Ticket Backlog Check</td><td>Check Azki seller pending cases</td><td>2026-09-24</td><td>Pending</td><td><input type="checkbox"></td></tr>
-                </tbody>
+                <tbody id="todo-table-body"></tbody>
             </table>
         </div>
 
-        <!-- IDP Section -->
+        <!-- IDP -->
         <div id="idp" class="section">
-            <h2 style="color:var(--navy); margin-top:0;">My IDP Template</h2>
+            <h2 style="color:var(--navy);">My IDP Template</h2>
             <table>
                 <thead>
-                    <tr>
-                        <th>Supervisor's Duties</th><th>Supervisor Characteristics</th><th>Qualities I Possess</th>
-                        <th>Accessing other features</th><th>Usable resources</th><th>Deadline</th>
-                        <th>Executive action</th><th>Final status</th>
-                    </tr>
+                    <tr><th>Supervisor Duties</th><th>Characteristics</th><th>Deadline</th><th>Final Status</th></tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>مقدمات و اصول</td><td>مسئولیت‌پذیری</td><td>تحلیلی و پیگیر</td><td>دسترسی سیستمی</td><td>مستندات و دیتا</td><td>1405-07-15</td><td>گذراندن آموزش اولیه</td>
-                        <td><input type="checkbox" checked></td>
-                    </tr>
-                    <tr>
-                        <td>مهارت و تسلط</td><td>حل مسئله</td><td>تمرکز بالا</td><td>پنل ارزیابی</td><td>جلسات انتقال تجربه</td><td>1405-08-30</td><td>پایش شاخص‌های عملکرد</td>
-                        <td><input type="checkbox" checked></td>
-                    </tr>
-                    <tr>
-                        <td>اقدام و رهبری</td><td>تصمیم‌گیری</td><td>مدیریت بحران</td><td>اختیارات اجرایی</td><td>تیم هماهنگی</td><td>1405-10-15</td><td>بهینه‌سازی صدور و تیکت‌ها</td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>قله هدف (تکمیل IDP)</td><td>رهبری سازمان</td><td>دید استراتژیک</td><td>سطح ارشد</td><td>داشبورد جامع</td><td>1405-12-29</td><td>ارزیابی جامع نهایی</td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                </tbody>
+                <tbody id="idp-table-body"></tbody>
             </table>
         </div>
     </div>
 </div>
 
 <script>
-    // تضمین اجرای رویداد ورود
-    function performLogin() {
-        var screen = document.getElementById('login-screen');
-        if (screen) {
-            screen.style.display = 'none';
-        }
-        updateDailyOverview();
-        updateIdpRoadmap();
+    // ==========================================
+    // تنظیمات Supabase (اختیاری: کلیدهای خود را اینجا بگذارید)
+    // ==========================================
+    const SUPABASE_URL = ""; 
+    const SUPABASE_KEY = "";
+    let supabase = null;
+    if (SUPABASE_URL && SUPABASE_KEY) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     }
 
-    // اتصال رویداد کلیک دکمه و کلید Enter
-    document.addEventListener("DOMContentLoaded", function() {
-        var btn = document.getElementById('loginBtn');
-        if (btn) {
-            btn.addEventListener('click', performLogin);
-        }
+    // دیتای اولیه لوکال
+    let todos = [
+        { id: 1, title: 'KPI Report', desc: 'Prepare performance tracking sheet', date: '2026-09-25', done: false },
+        { id: 2, title: 'Review IDP', desc: 'Analyze supervisory competencies', date: '2026-09-28', done: false },
+        { id: 3, title: 'Team Standup', desc: 'Weekly operations sync', date: '2026-09-23', done: true },
+        { id: 4, title: 'Ticket Backlog', desc: 'Check Azki seller pending cases', date: '2026-09-24', done: false }
+    ];
 
-        var uInput = document.getElementById('username');
-        var pInput = document.getElementById('password');
+    let idpList = [
+        { id: 1, duty: 'مقدمات و اصول', char: 'مسئولیت‌پذیری', date: '1405-07-15', done: true },
+        { id: 2, duty: 'مهارت و تسلط', char: 'حل مسئله', date: '1405-08-30', done: true },
+        { id: 3, duty: 'اقدام و رهبری', char: 'مدیریت بحران', date: '1405-10-15', done: false },
+        { id: 4, duty: 'قله هدف', char: 'دید استراتژیک', date: '1405-12-29', done: false }
+    ];
 
-        [uInput, pInput].forEach(function(inp) {
-            if (inp) {
-                inp.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        performLogin();
-                    }
-                });
+    // تابع لاگین بدون گیر کردن
+    function doLogin() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex';
+        renderTodos();
+        renderIdp();
+        renderDashboard();
+    }
+
+    function openTab(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active-link'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('nav-' + id).classList.add('active-link');
+    }
+
+    // اکشن‌های Todo
+    function renderTodos() {
+        const tb = document.getElementById('todo-table-body');
+        tb.innerHTML = '';
+        todos.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${t.title}</b></td>
+                <td>${t.desc}</td>
+                <td>${t.date}</td>
+                <td><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})"></td>
+                <td><button class="btn-delete" onclick="deleteTodo(${t.id})">Delete</button></td>
+            `;
+            tb.appendChild(tr);
+        });
+    }
+
+    function addTodo() {
+        const title = document.getElementById('new-todo-title').value.trim();
+        const desc = document.getElementById('new-todo-desc').value.trim();
+        const date = document.getElementById('new-todo-date').value;
+        if (!title) return alert('Please enter a task name.');
+
+        todos.push({ id: Date.now(), title, desc, date: date || '-', done: false });
+        document.getElementById('new-todo-title').value = '';
+        document.getElementById('new-todo-desc').value = '';
+        renderTodos();
+        renderDashboard();
+    }
+
+    function toggleTodo(id) {
+        const item = todos.find(t => t.id === id);
+        if (item) item.done = !item.done;
+        renderDashboard();
+    }
+
+    function deleteTodo(id) {
+        todos = todos.filter(t => t.id !== id);
+        renderTodos();
+        renderDashboard();
+    }
+
+    // اکشن‌های IDP
+    function renderIdp() {
+        const tb = document.getElementById('idp-table-body');
+        tb.innerHTML = '';
+        idpList.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${item.duty}</b></td>
+                <td>${item.char}</td>
+                <td>${item.date}</td>
+                <td><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleIdp(${item.id})"></td>
+            `;
+            tb.appendChild(tr);
+        });
+    }
+
+    function toggleIdp(id) {
+        const item = idpList.find(i => i.id === id);
+        if (item) item.done = !item.done;
+        renderDashboard();
+    }
+
+    // رندر داشبورد و پله‌های صعود
+    function renderDashboard() {
+        const doneTodos = todos.filter(t => t.done).length;
+        const totalTodos = todos.length;
+        const activeTodos = totalTodos - doneTodos;
+        const pct = totalTodos ? Math.round((doneTodos / totalTodos) * 100) : 0;
+
+        document.getElementById('stat-active').textContent = activeTodos;
+        document.getElementById('stat-done').textContent = doneTodos;
+        document.getElementById('stat-idp').textContent = idpList.length;
+        document.getElementById('daily-bar').style.width = pct + '%';
+        document.getElementById('daily-badge').textContent = pct + '% Completed';
+
+        // پلکان IDP SVG
+        const svg = document.getElementById('stairs-svg');
+        const doneCount = idpList.filter(i => i.done).length;
+        const totalIdp = idpList.length;
+        
+        document.getElementById('idp-state-text').textContent = doneCount === totalIdp ? 'هدف تکمیل شد 🎉' : `گام ${doneCount + 1} از ${totalIdp}`;
+
+        let svgHtml = `
+            <line x1="40" y1="220" x2="860" y2="220" stroke="#cbd5e1" stroke-width="3"/>
+        `;
+
+        const stepW = 750 / totalIdp;
+        idpList.forEach((st, idx) => {
+            const isDone = st.done;
+            const isCurrent = !isDone && (idx === doneCount);
+            const h = 40 + idx * 35;
+            const x = 70 + idx * stepW;
+            const y = 220 - h;
+            const color = isDone ? '#10b981' : (isCurrent ? '#f5b041' : '#1e293b');
+
+            svgHtml += `
+                <rect x="${x}" y="${y}" width="${stepW - 30}" height="${h}" rx="6" fill="${color}"/>
+                <text x="${x + (stepW - 30)/2}" y="${y + 20}" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">${st.duty}</text>
+            `;
+            if (isDone) {
+                svgHtml += `<circle cx="${x + (stepW - 30)/2}" cy="${y - 12}" r="8" fill="#10b981"/>`;
             }
         });
 
-        updateDailyOverview();
-        updateIdpRoadmap();
+        svg.innerHTML = svgHtml;
+    }
+
+    // رویداد Enter روی صفحه لاگین
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+            doLogin();
+        }
     });
+</script>
 
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
-        document.querySelectorAll('.sidebar a').forEach(function(a) { a.classList.remove('active-link'); });
-        var sec = document.getElementById(id);
-        var nav = document.getElementById('nav-' + id);
-        if (sec) sec.classList.add('active');
-        if (nav) nav.classList.add('active-link');
-    }
-
-    function updateDailyOverview() {
-        var rows = document.querySelectorAll('#todo tbody tr');
-        var done = 0;
-        rows.forEach(function(r) {
-            var cb = r.querySelector('input[type="checkbox"]');
-            if (cb && cb.checked) done++;
-        });
-        var total = rows.length;
-        var active = total - done;
-        var pct = total ? Math.round((done / total) * 100) : 0;
-
-        var statActive = document.getElementById('stat-active');
-        var statDone = document.getElementById('stat-done');
-        var progBar = document.getElementById('daily-progress-bar');
-        var pctTag = document.getElementById('daily-percent-tag');
-        var countTxt = document.getElementById('daily-count-text');
-
-        if (statActive) statActive.textContent = active;
-        if (statDone) statDone.textContent = done;
-        if (progBar) progBar.style.width = pct + '%';
-        if (pctTag) pctTag.textContent = pct + '% Completed';
-        if (countTxt) countTxt.textContent = done + ' of ' + total + ' Tasks';
-    }
-
-    function updateIdpRoadmap() {
-        var rows = document.querySelectorAll('#idp tbody tr');
-        var total = rows.length;
-        var statIdp = document.getElementById('stat-idp');
-        if (statIdp) statIdp.textContent = total;
-
-        var svg = document.getElementById('idp-stairs-svg');
-        if (!svg || total === 0) return;
-
-        var doneCount = 0;
-        var currentStep = null;
-
-        rows.forEach(function(r, idx) {
-            var cb = r.querySelector('input[type="checkbox"]');
-            var isDone = cb && cb.checked;
-            var duty = r.cells[0] ? r.cells[0].textContent.trim() : 'گام ' + (idx + 1);
-            var deadline = r.cells[5] ? r.cells[5].textContent.trim() : '-';
-
-            if (isDone) {
-                doneCount++;
-            } else if (currentStep === null) {
-                currentStep = { index: idx, duty: duty, deadline: deadline };
-            }
-        });
-
-        var html = `
-            <defs>
-                <linearGradient id="bookGradDone" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#059669"/>
-                    <stop offset="100%" stop-color="#10b981"/>
-                </linearGradient>
-                <linearGradient id="bookGradCurrent" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#d97706"/>
-                    <stop offset="100%" stop-color="#f5b041"/>
-                </linearGradient>
-                <linearGradient id="bookGradPending" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#1e293b"/>
-                    <stop offset="100%" stop-color="#334155"/>
-                </linearGradient>
-                <linearGradient id="goldFlag" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#fbbf24"/>
-                    <stop offset="100%" stop-color="#d97706"/>
-                </linearGradient>
-                <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
-                    <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.12"/>
-                </filter>
-            </defs>
-            <line x1="40" y1="230" x2="880" y2="230" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
-        `;
-
-        var baseW = 760;
-        var startX = 60;
-        var stepSlot = baseW / total;
-        var maxH = 140;
-
-        rows.forEach(function(r, idx) {
-            var cb = r.querySelector('input[type="checkbox"]');
-            var isDone = cb && cb.checked;
-            var isCurrent = (currentStep && currentStep.index === idx);
-            var duty = r.cells[0] ? r.cells[0].textContent.trim() : 'گام ' + (idx + 1);
-            var deadline = r.cells[5] ? r.cells[5].textContent.trim() : '';
-
-            var h = 45 + (idx / Math.max(total - 1, 1)) * maxH;
-            var x = startX + idx * stepSlot;
-            var y = 230 - h;
-            var w = Math.min(stepSlot - 30, 150);
-
-            var fillGrad = "url(#bookGradPending)";
-            if (isDone) fillGrad = "url(#bookGradDone)";
-            else if (isCurrent) fillGrad = "url(#bookGradCurrent)";
-
-            html += `
-                <g filter="url(#shadow)">
-                    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fillGrad}"/>
-                    <rect x="${x + 6}" y="${y + 4}" width="4" height="${h - 8}" rx="2" fill="rgba(255,255,255,0.25)"/>
-                    <rect x="${x}" y="${y}" width="${w}" height="18" rx="4" fill="rgba(0,0,0,0.1)"/>
-                </g>
-            `;
-
-            if (isDone) {
-                html += `
-                    <circle cx="${x + w/2}" cy="${y - 14}" r="11" fill="#10b981" filter="url(#shadow)"/>
-                    <path d="M${x + w/2 - 4} ${y - 14} l3 3 l6 -6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                `;
-            } else if (isCurrent) {
-                html += `
-                    <g filter="url(#shadow)">
-                        <circle cx="${x + w/2}" cy="${y - 20}" r="12" fill="#f5b041"/>
-                        <polygon points="${x + w/2},${y - 4} ${x + w/2 - 6},${y - 12} ${x + w/2 + 6},${y - 12}" fill="#f5b041"/>
-                        <circle cx="${x + w/2}" cy="${y - 20}" r="4" fill="#0f172a"/>
-                    </g>
-                `;
-            }
-
-            html += `
-                <text x="${x + w/2}" y="${y + 14}" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle">${duty}</text>
-            `;
-
-            if (deadline) {
-                html += `
-                    <rect x="${x + (w - 85)/2}" y="238" width="85" height="20" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                    <text x="${x + w/2}" y="252" fill="#64748b" font-size="10" font-weight="600" text-anchor="middle">${deadline}</text>
-                `;
-            }
-        });
-
-        var lastIdx = total - 1;
-        var lastW = Math.min(stepSlot - 30, 150);
-        var lastX = startX + lastIdx * stepSlot + lastW / 2;
-        var lastY = 230 - (45 + maxH);
-        html += `
-            <g filter="url(#shadow)">
-                <line x1="${lastX}" y1="${lastY}" x2="${lastX}" y2="${lastY - 40}" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
-                <path d="M ${lastX} ${lastY - 40} Q ${lastX + 38} ${lastY - 34} ${lastX + 48} ${lastY - 22} Q ${lastX + 18} ${lastY - 14} ${lastX} ${lastY - 18} Z" fill="url(#goldFlag)"/>
-                <text x="${lastX + 24}" y="${lastY - 24}" fill="#0b132b" font-size="10" font-weight="900" text-anchor="middle">قله هدف</text>
-            </g>
-        `;
-
-        svg.innerHTML = html;
-
-        var posTag = document.getElementById('idp-position-tag');
-        var curInfo = document.getElementById('idp-current-info');
-        var statsInfo = document.getElementById('idp-stats-info');
-
-        if (doneCount === total) {
-            if (posTag) posTag.textContent = 'تمام مراحل با موفقیت تکمیل شد 🎉';
-            if (curInfo) curInfo.innerHTML = '<h4 style="color:#059669;">رسیدن به قله هدف</h4><p>تمامی اهداف توسعه فردی با موفقیت پاس شدند.</p>';
-        } else {
-            var currentStepNum = doneCount + 1;
-            if (posTag) posTag.textContent = 'گام ' + currentStepNum + ' از ' + total + ' (در حال صعود)';
-            if (curInfo && currentStep) {
-                curInfo.innerHTML = '<h4>گام جاری: ' + currentStep.duty + '</h4><p>مهلت اقدام تا: <b>' + currentStep.deadline + '</b></p>';
-            }
-        }
-
-        if (
+</body>
+</html>
