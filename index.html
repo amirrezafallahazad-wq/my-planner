@@ -3,93 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Planner</title>
+    <title>My Planner Application</title>
     <style>
         :root { --navy: #1a2a6c; --gold: #ffd700; --light: #f4f4f9; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--light); }
-        .navbar { background-color: var(--navy); color: white; padding: 15px 30px; display: flex; justify-content: flex-end; align-items: center; gap: 25px; }
-        .navbar a { color: var(--gold); text-decoration: none; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; transition: 0.3s; }
-        .navbar a:hover { border-bottom: 2px solid var(--gold); }
-        .container { padding: 40px; max-width: 1000px; margin: auto; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; background-color: var(--light); }
+        
+        /* Login Screen */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--navy); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; z-index: 1000; }
+        input { padding: 10px; margin: 10px; border-radius: 5px; border: none; width: 250px; }
+        .login-btn { background: var(--gold); color: var(--navy); padding: 10px 30px; border: none; cursor: pointer; font-weight: bold; }
+
+        /* Sidebar & Content */
+        #main-app { display: none; width: 100%; display: flex; }
+        .sidebar { width: 220px; background-color: var(--navy); color: white; padding: 20px; }
+        .sidebar a { display: block; color: var(--gold); padding: 15px 0; text-decoration: none; font-weight: bold; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .content { flex-grow: 1; padding: 40px; overflow-x: auto; }
+        
         .section { display: none; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 15px; border: 1px solid #ddd; text-align: left; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
         th { background-color: var(--navy); color: white; }
-        .btn { background-color: var(--navy); color: var(--gold); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px; }
-        input[type="checkbox"] { transform: scale(1.5); }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <a onclick="showSection('dashboard')">Dashboard</a>
-    <a onclick="showSection('todo')">Todo Diurnus</a>
-    <a onclick="showSection('idp')">My IDP Template</a>
+<!-- Login Screen -->
+<div id="login-screen">
+    <h2>Welcome to Planner</h2>
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+    <button class="login-btn" onclick="login()">Login</button>
 </div>
 
-<div class="container">
-    <!-- Dashboard Section -->
-    <div id="dashboard" class="section active">
-        <h2>Dashboard</h2>
-        <p>Welcome back! Check your daily tasks and IDP progress here.</p>
+<!-- Main App -->
+<div id="main-app">
+    <div class="sidebar">
+        <h2 style="color:var(--gold)">My Planner</h2>
+        <a onclick="showSection('dashboard')">Dashboard</a>
+        <a onclick="showSection('todo')">Todo Diurnus</a>
+        <a onclick="showSection('idp')">My IDP Template</a>
     </div>
 
-    <!-- Todo Section -->
-    <div id="todo" class="section">
-        <h2>Todo Diurnus</h2>
-        <button class="btn">+ Add Task</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Done</th>
-                    <th>Task Name</th>
-                    <th>Description</th>
-                    <th>Deadline</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Finish Report</td>
-                    <td>Prepare KPI Tracking Sheet</td>
-                    <td>2026-09-25</td>
-                    <td>In Progress</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <div class="content">
+        <div id="dashboard" class="section active">
+            <h2>Dashboard</h2>
+            <p>Welcome! View your stats here.</p>
+        </div>
 
-    <!-- IDP Section -->
-    <div id="idp" class="section">
-        <h2>My IDP Template</h2>
-        <button class="btn">+ Add Growth Area</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Skill/Competency</th>
-                    <th>Goal</th>
-                    <th>Timeframe</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>JavaScript</td>
-                    <td>Master Async Functions</td>
-                    <td>Oct 2026</td>
-                    <td>Planning</td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="todo" class="section">
+            <h2>Todo Diurnus</h2>
+            <table>
+                <thead>
+                    <tr><th>Task Name</th><th>Description</th><th>Deadline</th><th>Status</th><th>Done</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Finish Report</td><td>KPI Tracking</td><td>2026-09-25</td><td>Pending</td><td><input type="checkbox"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="idp" class="section">
+            <h2>My IDP Template</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Supervisor's Duties</th><th>Supervisor Characteristics</th><th>Qualities I Possess</th>
+                        <th>Accessing other features</th><th>Usable resources</th><th>Deadline</th>
+                        <th>Executive action</th><th>Final status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Manage Team</td><td>Leader</td><td>Analytical</td><td>Available</td><td>Docs/Data</td><td>Oct 2026</td><td>Training</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    function showSection(sectionId) {
+    function login() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex';
+    }
+    function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(sectionId).classList.add('active');
+        document.getElementById(id).classList.add('active');
     }
 </script>
 
