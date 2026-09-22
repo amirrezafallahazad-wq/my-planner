@@ -5,25 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Planner Application</title>
     <style>
-        :root { --navy: #1a2a6c; --gold: #ffd700; --light: #f4f4f9; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; background-color: var(--light); }
+        :root { --navy: #1a2a6c; --gold: #ffd700; --light: #f4f4f9; --text-dark: #333; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; min-height: 100vh; background-color: var(--light); direction: ltr; }
         
         /* Login Screen */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--navy); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; z-index: 1000; }
-        input { padding: 10px; margin: 10px; border-radius: 5px; border: none; width: 250px; }
+        input { padding: 12px; margin: 10px; border-radius: 5px; border: none; width: 250px; }
         .login-btn { background: var(--gold); color: var(--navy); padding: 10px 30px; border: none; cursor: pointer; font-weight: bold; }
 
-        /* Sidebar & Content */
+        /* Main App */
         #main-app { display: none; width: 100%; display: flex; }
         .sidebar { width: 220px; background-color: var(--navy); color: white; padding: 20px; }
-        .sidebar a { display: block; color: var(--gold); padding: 15px 0; text-decoration: none; font-weight: bold; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .content { flex-grow: 1; padding: 40px; overflow-x: auto; }
+        .sidebar h2 { color: var(--gold); }
+        .sidebar a { display: block; color: white; padding: 15px 0; text-decoration: none; font-weight: bold; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar a:hover { color: var(--gold); }
+        .content { flex-grow: 1; padding: 40px; }
         
-        .section { display: none; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .section { display: none; }
         .active { display: block; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        /* Dashboard Styling */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-right: 5px solid var(--gold); }
+        .stat-card h3 { margin: 0; color: var(--navy); }
+        .stat-number { font-size: 24px; font-weight: bold; margin-top: 10px; }
+        
+        .progress-container { background: white; padding: 25px; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .progress-bar-bg { background: #eee; height: 20px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        .progress-bar-fill { background: var(--gold); height: 100%; width: 65%; } /* مقدار پیشرفت */
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: right; }
         th { background-color: var(--navy); color: white; }
     </style>
 </head>
@@ -31,69 +43,63 @@
 
 <!-- Login Screen -->
 <div id="login-screen">
-    <h2>Welcome to Planner</h2>
-    <input type="text" placeholder="Username">
-    <input type="password" placeholder="Password">
-    <button class="login-btn" onclick="login()">Login</button>
+    <h2>ورود به پلنر</h2>
+    <input type="text" placeholder="نام کاربری">
+    <input type="password" placeholder="رمز عبور">
+    <button class="login-btn" onclick="login()">ورود</button>
 </div>
 
 <!-- Main App -->
 <div id="main-app">
     <div class="sidebar">
-        <h2 style="color:var(--gold)">My Planner</h2>
-        <a onclick="showSection('dashboard')">Dashboard</a>
-        <a onclick="showSection('todo')">Todo Diurnus</a>
-        <a onclick="showSection('idp')">My IDP Template</a>
+        <h2>My Planner</h2>
+        <a onclick="showSection('dashboard')">داشبورد</a>
+        <a onclick="showSection('todo')">تسک‌ها</a>
+        <a onclick="showSection('idp')">برنامه توسعه فردی</a>
     </div>
 
     <div class="content">
+        <!-- Dashboard -->
         <div id="dashboard" class="section active">
-            <h2>Dashboard</h2>
-            <p>Welcome! View your stats here.</p>
+            <h2 style="color:var(--navy)">خوش آمدید، مدیر عزیز!</h2>
+            <div class="dashboard-grid">
+                <div class="stat-card"><h3>تسک‌های فعال امروز</h3><div class="stat-number">۸</div></div>
+                <div class="stat-card"><h3>تسک‌های تکمیل شده</h3><div class="stat-number">۱۲</div></div>
+                <div class="stat-card"><h3>اهداف IDP در مسیر</h3><div class="stat-number">۴</div></div>
+            </div>
+            
+            <div class="progress-container">
+                <h3>وضعیت پیشرفت کلی اهداف</h3>
+                <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                <p>۶۵٪ از مسیر هدف‌گذاری ماهانه طی شده است.</p>
+            </div>
         </div>
 
+        <!-- Todo -->
         <div id="todo" class="section">
-            <h2>Todo Diurnus</h2>
+            <h2 style="color:var(--navy)">تسک‌های روزانه (Todo Diurnus)</h2>
             <table>
-                <thead>
-                    <tr><th>Task Name</th><th>Description</th><th>Deadline</th><th>Status</th><th>Done</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Finish Report</td><td>KPI Tracking</td><td>2026-09-25</td><td>Pending</td><td><input type="checkbox"></td></tr>
-                </tbody>
+                <thead><tr><th>نام تسک</th><th>توضیحات</th><th>ددلاین</th><th>وضعیت</th><th>انجام شد</th></tr></thead>
+                <tbody><tr><td>گزارش KPI</td><td>آماده‌سازی فایل عملکرد</td><td>۱۴۰۵-۰۷-۰۳</td><td>در حال انجام</td><td><input type="checkbox"></td></tr></tbody>
             </table>
         </div>
 
+        <!-- IDP -->
         <div id="idp" class="section">
-            <h2>My IDP Template</h2>
+            <h2 style="color:var(--navy)">برنامه توسعه فردی (IDP)</h2>
             <table>
                 <thead>
-                    <tr>
-                        <th>Supervisor's Duties</th><th>Supervisor Characteristics</th><th>Qualities I Possess</th>
-                        <th>Accessing other features</th><th>Usable resources</th><th>Deadline</th>
-                        <th>Executive action</th><th>Final status</th>
-                    </tr>
+                    <tr><th>وظایف سرپرست</th><th>ویژگی‌های سرپرست</th><th>توانایی‌های من</th><th>دسترسی‌ها</th><th>منابع</th><th>ددلاین</th><th>اقدام اجرایی</th><th>وضعیت نهایی</th></tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Manage Team</td><td>Leader</td><td>Analytical</td><td>Available</td><td>Docs/Data</td><td>Oct 2026</td><td>Training</td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                </tbody>
+                <tbody><tr><td>مدیریت تیم</td><td>رهبر</td><td>تحلیل‌گر</td><td>فراهم است</td><td>اسناد</td><td>اکتبر ۲۰۲۶</td><td>آموزش</td><td><input type="checkbox"></td></tr></tbody>
             </table>
         </div>
     </div>
 </div>
 
 <script>
-    function login() {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'flex';
-    }
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
+    function login() { document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-app').style.display = 'flex'; }
+    function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 </script>
 
 </body>
