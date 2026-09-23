@@ -27,7 +27,7 @@
             color: var(--text-dark);
         }
 
-        /* ------------------ LOGIN SCREEN ------------------ */
+        /* LOGIN SCREEN */
         #login-screen {
             position: fixed;
             inset: 0;
@@ -39,29 +39,28 @@
             z-index: 9999;
         }
         .login-box {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.08);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255,255,255,0.15);
             padding: 40px 45px;
             border-radius: 16px;
             width: 360px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
         .login-box h2 {
-            color: #ffffff;
+            color: #fff;
             font-size: 22px;
             margin-bottom: 25px;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
         .login-box input {
             width: 100%;
             padding: 14px 16px;
             margin-bottom: 15px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.95);
             font-size: 14px;
             color: #111;
             outline: none;
@@ -69,7 +68,7 @@
         }
         .login-box input:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(245, 176, 65, 0.3);
+            box-shadow: 0 0 0 3px rgba(245,176,65,0.3);
         }
         .login-btn {
             width: 100%;
@@ -86,15 +85,11 @@
         }
         .login-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(243, 156, 18, 0.4);
+            box-shadow: 0 6px 16px rgba(243,156,18,0.4);
         }
 
-        /* ------------------ MAIN LAYOUT ------------------ */
-        #main-app {
-            display: none;
-            width: 100%;
-            min-height: 100vh;
-        }
+        /* MAIN LAYOUT */
+        #main-app { display: none; width: 100%; min-height: 100vh; }
         .sidebar {
             width: 250px;
             background: linear-gradient(180deg, var(--navy-deep) 0%, #15224e 100%);
@@ -103,7 +98,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            box-shadow: 4px 0 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 4px 0 16px rgba(0,0,0,0.08);
             flex-shrink: 0;
         }
         .brand-title {
@@ -111,7 +106,6 @@
             font-size: 20px;
             font-weight: 700;
             margin: 0 0 30px 10px;
-            letter-spacing: 0.5px;
         }
         .sidebar a {
             display: flex;
@@ -127,41 +121,27 @@
             transition: all 0.2s;
         }
         .sidebar a:hover, .sidebar a.active-link {
-            background: rgba(245, 176, 65, 0.15);
+            background: rgba(245,176,65,0.15);
             color: var(--gold);
         }
 
-        .content {
-            flex-grow: 1;
-            padding: 40px;
-            overflow-y: auto;
-        }
-
+        .content { flex-grow: 1; padding: 40px; overflow-y: auto; }
         .section { display: none; }
         .section.active { display: block; }
 
-        /* ------------------ DASHBOARD ------------------ */
+        /* DASHBOARD */
         .dashboard-header {
             background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
             padding: 30px 35px;
             border-radius: 16px;
             color: white;
             margin-bottom: 25px;
-            box-shadow: 0 10px 25px rgba(26, 42, 108, 0.15);
+            box-shadow: 0 10px 25px rgba(26,42,108,0.15);
             border-left: 6px solid var(--gold);
         }
-        .dashboard-header h1 {
-            margin: 0;
-            font-size: 26px;
-            font-weight: 700;
-        }
-        .dashboard-header p {
-            margin: 8px 0 0 0;
-            color: #cbd5e1;
-            font-size: 14px;
-        }
+        .dashboard-header h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .dashboard-header p { margin: 8px 0 0; color: #cbd5e1; font-size: 14px; }
 
-        /* Stat Cards */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -174,55 +154,38 @@
             padding: 24px;
             border-radius: 14px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 4px solid #cbd5e1;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
-        }
-        .stat-card.card-active { border-top-color: #3b82f6; }
-        .stat-card.card-completed { border-top-color: #10b981; }
-        .stat-card.card-idp { border-top-color: var(--gold); }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.07); }
+        .stat-card.card-active   { border-top-color: #3b82f6; }
+        .stat-card.card-completed{ border-top-color: #10b981; }
+        .stat-card.card-idp      { border-top-color: var(--gold); }
 
         .stat-info { text-align: right; }
-        .stat-title {
-            font-size: 14px;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--navy-deep);
-            line-height: 1;
-        }
+        .stat-title { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+        .stat-value { font-size: 32px; font-weight: 800; color: var(--navy-deep); line-height: 1; }
 
         .stat-badge-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 56px; height: 56px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .card-active .stat-badge-icon { background: #eff6ff; color: #2563eb; }
-        .card-completed .stat-badge-icon { background: #ecfdf5; color: #059669; }
-        .card-idp .stat-badge-icon { background: #fffbeb; color: #d97706; }
+        .card-active   .stat-badge-icon { background: #eff6ff; color: #2563eb; }
+        .card-completed.stat-badge-icon { background: #ecfdf5; color: #059669; }
+        .card-idp      .stat-badge-icon { background: #fffbeb; color: #d97706; }
         .stat-badge-icon svg { width: 30px; height: 30px; }
 
-        /* Panels (Daily Overview & IDP Stairs) */
+        /* PANELS */
         .card-panel {
             background: white;
             border-radius: 16px;
             padding: 26px 30px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             direction: rtl;
             margin-bottom: 25px;
         }
@@ -232,11 +195,7 @@
             align-items: center;
             margin-bottom: 18px;
         }
-        .panel-header h2 {
-            margin: 0;
-            font-size: 18px;
-            color: var(--navy-deep);
-        }
+        .panel-header h2 { margin: 0; font-size: 18px; color: var(--navy-deep); }
         .panel-tag {
             background: #eff6ff;
             color: #1d4ed8;
@@ -244,49 +203,127 @@
             border-radius: 20px;
             font-size: 13px;
             font-weight: 700;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0.3px;
         }
 
-        .stairs-canvas {
+        /* IDP ROADMAP redesign */
+        .idp-roadmap-wrap {
             width: 100%;
-            height: 230px;
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-        }
-
-        /* ------------------ TABLES ------------------ */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
+            background: linear-gradient(180deg, #f0f4ff 0%, #e8eef8 100%);
+            border-radius: 14px;
+            border: 1px solid #d4ddf0;
+            padding: 24px 20px 16px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid var(--card-border);
-            margin-top: 15px;
         }
-        th, td {
-            padding: 14px 18px;
-            text-align: left;
+        .idp-steps {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0;
+            height: 180px;
+            direction: ltr;
+        }
+        .idp-step-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 160px;
+            position: relative;
+        }
+        .idp-bar {
+            width: 72%;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 8px;
+            transition: opacity 0.3s;
+            cursor: default;
+        }
+        .idp-bar-done    { background: linear-gradient(180deg, #34d399 0%, #059669 100%); }
+        .idp-bar-current { background: linear-gradient(180deg, #fcd34d 0%, #d97706 100%); }
+        .idp-bar-pending { background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%); opacity: 0.55; }
+
+        .idp-bar-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+        .idp-connector {
+            width: 100%;
+            height: 6px;
+            background: #c7d2e8;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            z-index: 0;
+        }
+        .idp-step-label {
+            margin-top: 10px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--navy-deep);
+            text-align: center;
+            direction: rtl;
+            line-height: 1.45;
+            padding: 0 4px;
+        }
+        .idp-step-label.muted { color: var(--text-muted); font-weight: 500; }
+        .idp-deadline {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            direction: ltr;
+            font-weight: 500;
+        }
+        /* flag pole on last step */
+        .idp-flag-wrap {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .idp-flag-pole { width: 3px; height: 32px; background: #475569; border-radius: 2px; }
+        .idp-flag-svg { margin-top: 0; }
+
+        /* current step glow */
+        .idp-bar-current::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 0 0 3px rgba(245,176,65,0.55);
+        }
+
+        .idp-summary-box {
+            margin-top: 18px;
             font-size: 14px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        th {
-            background-color: var(--navy);
-            color: white;
+            color: var(--navy-deep);
             font-weight: 600;
+            line-height: 2;
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            direction: rtl;
         }
+
+        /* TABLES */
+        table {
+            width: 100%; border-collapse: collapse; background: white;
+            border-radius: 10px; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--card-border); margin-top: 15px;
+        }
+        th, td { padding: 14px 18px; text-align: left; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+        th { background-color: var(--navy); color: white; font-weight: 600; }
         tr:last-child td { border-bottom: none; }
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--navy);
-        }
+        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--navy); }
     </style>
 </head>
 <body>
@@ -295,7 +332,7 @@
 <div id="login-screen">
     <div class="login-box">
         <h2>Login to Amirreza's Planner</h2>
-        <input type="text" id="username" placeholder="Username" autocomplete="off">
+        <input type="text"     id="username" placeholder="Username" autocomplete="off">
         <input type="password" id="password" placeholder="Password">
         <button class="login-btn" onclick="login()">Log In</button>
     </div>
@@ -303,7 +340,6 @@
 
 <!-- MAIN APP -->
 <div id="main-app">
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="brand-title">My Planner</div>
         <a id="nav-dashboard" class="active-link" onclick="showSection('dashboard')">
@@ -320,9 +356,8 @@
         </a>
     </div>
 
-    <!-- Main Content -->
     <div class="content">
-        <!-- Dashboard -->
+        <!-- DASHBOARD -->
         <div id="dashboard" class="section active">
             <div class="dashboard-header">
                 <h1>Welcome to Amirreza's Planner</h1>
@@ -337,63 +372,56 @@
                         <div class="stat-value" id="stat-active">۰</div>
                     </div>
                     <div class="stat-badge-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                     </div>
                 </div>
-
                 <div class="stat-card card-completed">
                     <div class="stat-info">
                         <div class="stat-title">تسک‌های تکمیل شده</div>
                         <div class="stat-value" id="stat-done">۰</div>
                     </div>
                     <div class="stat-badge-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
                 </div>
-
                 <div class="stat-card card-idp">
                     <div class="stat-info">
                         <div class="stat-title">اهداف IDP در مسیر</div>
                         <div class="stat-value" id="stat-idp">۰</div>
                     </div>
                     <div class="stat-badge-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                     </div>
                 </div>
             </div>
 
-            <!-- Panel 1: Daily Overview Progress Bar -->
+            <!-- Panel 1: Daily Overview — progress bar + percentage badge only -->
             <div class="card-panel">
                 <div class="panel-header">
                     <h2>نمای کلی عملکرد امروز</h2>
-                    <span class="panel-tag" id="daily-percent-tag">۰٪ انجام شده</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
-                    <span>میزان تحقق تسک‌های روزانه</span>
-                    <span id="daily-count-text">۰ از ۰ تسک</span>
+                    <span class="panel-tag" id="daily-percent-tag">0% Done</span>
                 </div>
                 <div style="width:100%; height:18px; background:#eef2f7; border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
                     <div id="daily-progress-bar" style="height:100%; width:0%; border-radius:10px; background:linear-gradient(90deg,#f5b041,#d97706); transition:width 0.8s ease;"></div>
                 </div>
-                <div id="daily-motivation" style="margin-top:10px; font-size:13px; color:var(--navy-light); font-weight:600;"></div>
             </div>
 
-            <!-- Panel 2: IDP Book Stairs Roadmap (Dynamic) -->
+            <!-- Panel 2: IDP Roadmap — redesigned stair bars -->
             <div class="card-panel">
                 <div class="panel-header">
                     <h2>پلکان توسعه فردی (IDP) و مسیر دستیابی به هدف</h2>
                     <span class="panel-tag" id="idp-position-tag">در حال محاسبه...</span>
                 </div>
-                <div class="stairs-canvas">
-                    <svg id="idp-stairs-svg" viewBox="0 0 900 230" width="100%" height="100%" style="overflow:visible;"></svg>
+                <div class="idp-roadmap-wrap">
+                    <div class="idp-steps" id="idp-steps-container"></div>
                 </div>
-                <div id="idp-summary" style="margin-top:18px; font-size:14px; color:var(--navy-deep); font-weight:600; line-height:2; background:#f8fafc; padding:15px 20px; border-radius:10px; border:1px solid #e2e8f0;"></div>
+                <div class="idp-summary-box" id="idp-summary"></div>
             </div>
         </div>
 
-        <!-- Todo Section -->
+        <!-- TODO -->
         <div id="todo" class="section">
-            <h2 style="color:var(--navy); margin-top:0;">Todo Diurnus</h2>
+            <h2 style="color:var(--navy);margin-top:0;">Todo Diurnus</h2>
             <table>
                 <thead>
                     <tr><th>Task Name</th><th>Description</th><th>Deadline</th><th>Status</th><th>Done</th></tr>
@@ -407,9 +435,9 @@
             </table>
         </div>
 
-        <!-- IDP Section -->
+        <!-- IDP TABLE -->
         <div id="idp" class="section">
-            <h2 style="color:var(--navy); margin-top:0;">My IDP Template</h2>
+            <h2 style="color:var(--navy);margin-top:0;">My IDP Template</h2>
             <table>
                 <thead>
                     <tr>
@@ -420,20 +448,24 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>مقدمات و اصول</td><td>مسئولیت‌پذیری</td><td>تحلیلی و پیگیر</td><td>دسترسی سیستمی</td><td>مستندات و دیتا</td><td>1405-07-15</td><td>گذراندن آموزش اولیه</td>
-                        <td><input type="checkbox" checked></td>
+                        <td>مقدمات و اصول</td><td>مسئولیت‌پذیری</td><td>تحلیلی و پیگیر</td>
+                        <td>دسترسی سیستمی</td><td>مستندات و دیتا</td><td>1405-07-15</td>
+                        <td>گذراندن آموزش اولیه</td><td><input type="checkbox" checked></td>
                     </tr>
                     <tr>
-                        <td>مهارت و تسلط</td><td>حل مسئله</td><td>تمرکز بالا</td><td>پنل ارزیابی</td><td>جلسات انتقال تجربه</td><td>1405-08-30</td><td>پایش شاخص‌های عملکرد</td>
-                        <td><input type="checkbox" checked></td>
+                        <td>مهارت و تسلط</td><td>حل مسئله</td><td>تمرکز بالا</td>
+                        <td>پنل ارزیابی</td><td>جلسات انتقال تجربه</td><td>1405-08-30</td>
+                        <td>پایش شاخص‌های عملکرد</td><td><input type="checkbox" checked></td>
                     </tr>
                     <tr>
-                        <td>اقدام و رهبری</td><td>تصمیم‌گیری</td><td>مدیریت بحران</td><td>اختیارات اجرایی</td><td>تیم هماهنگی</td><td>1405-10-15</td><td>بهینه‌سازی صدور و تیکت‌ها</td>
-                        <td><input type="checkbox"></td>
+                        <td>اقدام و رهبری</td><td>تصمیم‌گیری</td><td>مدیریت بحران</td>
+                        <td>اختیارات اجرایی</td><td>تیم هماهنگی</td><td>1405-10-15</td>
+                        <td>بهینه‌سازی صدور و تیکت‌ها</td><td><input type="checkbox"></td>
                     </tr>
                     <tr>
-                        <td>قله هدف (تکمیل IDP)</td><td>رهبری سازمان</td><td>دید استراتژیک</td><td>سطح ارشد</td><td>داشبورد جامع</td><td>1405-12-29</td><td>ارزیابی جامع نهایی</td>
-                        <td><input type="checkbox"></td>
+                        <td>قله هدف (تکمیل IDP)</td><td>رهبری سازمان</td><td>دید استراتژیک</td>
+                        <td>سطح ارشد</td><td>داشبورد جامع</td><td>1405-12-29</td>
+                        <td>ارزیابی جامع نهایی</td><td><input type="checkbox"></td>
                     </tr>
                 </tbody>
             </table>
@@ -460,149 +492,107 @@
         return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
     }
 
-    // 1. Calculate Daily Todo Stats
+    // ── Daily Overview: progress bar + badge only ──────────────────────────
     function updateDailyOverview() {
-        const rows = document.querySelectorAll('#todo tbody tr');
-        let done = 0;
-        rows.forEach(r => {
-            const cb = r.querySelector('input[type="checkbox"]');
-            if (cb && cb.checked) done++;
-        });
+        const rows  = document.querySelectorAll('#todo tbody tr');
+        let done    = 0;
+        rows.forEach(r => { if (r.querySelector('input[type="checkbox"]')?.checked) done++; });
         const total = rows.length;
-        const active = total - done;
-        const pct = total ? Math.round((done / total) * 100) : 0;
+        const active= total - done;
+        const pct   = total ? Math.round((done / total) * 100) : 0;
 
         document.getElementById('stat-active').textContent = faNum(active);
-        document.getElementById('stat-done').textContent = faNum(done);
+        document.getElementById('stat-done').textContent   = faNum(done);
         document.getElementById('daily-progress-bar').style.width = pct + '%';
-        document.getElementById('daily-percent-tag').textContent = faNum(pct) + '٪ انجام شده';
-        document.getElementById('daily-count-text').textContent = faNum(done) + ' از ' + faNum(total) + ' تسک';
-
-        let msg = 'شروع خوبیه، برای تکمیل بقیه تسک‌ها ادامه بده!';
-        if (pct === 100) msg = 'فوق‌العاده است! تمام تسک‌های امروز با موفقیت کامل شدند.';
-        else if (pct >= 60) msg = 'بیش از نیمی از مسیر روزانه‌ات رو رفتی، ادامه بده!';
-        document.getElementById('daily-motivation').textContent = msg;
+        document.getElementById('daily-percent-tag').textContent  = pct + '% Done';
     }
 
-    // 2. Build IDP Roadmap & Stairs from IDP table
+    // ── IDP Roadmap: stair bar redesign ────────────────────────────────────
     function updateIdpRoadmap() {
         const rows = document.querySelectorAll('#idp tbody tr');
         const total = rows.length;
         document.getElementById('stat-idp').textContent = faNum(total);
 
-        const svg = document.getElementById('idp-stairs-svg');
-        if (!svg || total === 0) return;
+        const container = document.getElementById('idp-steps-container');
+        if (!container || total === 0) return;
 
-        let doneCount = 0;
-        let currentStep = null;
-
-        rows.forEach((r, idx) => {
-            const cb = r.querySelector('input[type="checkbox"]');
-            const isDone = cb && cb.checked;
-            const duty = r.cells[0] ? r.cells[0].textContent.trim() : 'گام ' + (idx + 1);
-            const deadline = r.cells[5] ? r.cells[5].textContent.trim() : '-';
-
-            if (isDone) {
-                doneCount++;
-            } else if (currentStep === null) {
-                currentStep = { index: idx, duty: duty, deadline: deadline };
-            }
-        });
-
-        // SVG Drawing
-        let html = `
-            <defs>
-                <linearGradient id="flagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#f5b041"/>
-                    <stop offset="100%" stop-color="#d97706"/>
-                </linearGradient>
-            </defs>
-            <line x1="40" y1="200" x2="860" y2="200" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="6,6"/>
-        `;
-
-        const baseW = 760;
-        const startX = 70;
-        const stepSlot = baseW / total;
-        const maxH = 140;
+        const stepData = [];
+        let doneCount  = 0;
+        let currentIdx = null;
 
         rows.forEach((r, idx) => {
-            const cb = r.querySelector('input[type="checkbox"]');
-            const isDone = cb && cb.checked;
-            const isCurrent = (currentStep && currentStep.index === idx);
-            const duty = r.cells[0] ? r.cells[0].textContent.trim() : 'گام ' + (idx + 1);
-            const deadline = r.cells[5] ? r.cells[5].textContent.trim() : '';
-
-            const h = 40 + (idx / Math.max(total - 1, 1)) * maxH;
-            const x = startX + idx * stepSlot;
-            const y = 200 - h;
-            const w = Math.min(stepSlot - 25, 140);
-
-            // Stacked books simulation
-            const bookLayers = 2 + (idx % 2);
-            for (let b = 0; b < bookLayers; b++) {
-                const bh = h / bookLayers;
-                let color = '#1e3a8a';
-                if (isDone) color = '#10b981';
-                else if (isCurrent) color = (b === bookLayers - 1) ? '#f5b041' : '#d97706';
-                else color = (b === 0) ? '#0f172a' : '#1e3a8a';
-
-                html += `<rect x="${x + b * 4}" y="${y + b * bh}" width="${w - b * 8}" height="${bh - 3}" rx="4" fill="${color}"/>`;
-            }
-
-            // Indicator above step
-            if (isDone) {
-                html += `<circle cx="${x + w/2}" cy="${y - 12}" r="10" fill="#10b981"/>
-                         <text x="${x + w/2}" y="${y - 8}" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">✓</text>`;
-            } else if (isCurrent) {
-                html += `<polygon points="${x + w/2},${y - 4} ${x + w/2 - 7},${y - 16} ${x + w/2 + 7},${y - 16}" fill="#f5b041"/>
-                         <circle cx="${x + w/2}" cy="${y - 22}" r="5" fill="#f5b041"/>`;
-            }
-
-            // Step Label & Deadline
-            html += `<text x="${x + w/2}" y="${y + 16}" fill="${isCurrent ? '#0f1c3f' : '#ffffff'}" font-size="11" font-weight="bold" text-anchor="middle">${duty}</text>`;
-            if (deadline) {
-                html += `<text x="${x + w/2}" y="${y + 30}" fill="#e2e8f0" font-size="9" text-anchor="middle">${deadline}</text>`;
-            }
+            const checked  = r.querySelector('input[type="checkbox"]')?.checked || false;
+            const duty     = r.cells[0]?.textContent.trim() || ('گام ' + (idx + 1));
+            const deadline = r.cells[5]?.textContent.trim() || '';
+            if (checked) doneCount++;
+            else if (currentIdx === null) currentIdx = idx;
+            stepData.push({ duty, deadline, checked, isCurrent: false });
         });
+        if (currentIdx !== null) stepData[currentIdx].isCurrent = true;
 
-        // Golden Target Flag on final step
-        const lastIdx = total - 1;
-        const lastX = startX + lastIdx * stepSlot + Math.min(stepSlot - 25, 140) / 2;
-        const lastY = 200 - (40 + maxH);
-        html += `
-            <line x1="${lastX}" y1="${lastY}" x2="${lastX}" y2="${lastY - 35}" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
-            <path d="M ${lastX} ${lastY - 35} Q ${lastX + 35} ${lastY - 30} ${lastX + 45} ${lastY - 20} Q ${lastX + 15} ${lastY - 12} ${lastX} ${lastY - 15} Z" fill="url(#flagGrad)"/>
-            <text x="${lastX + 22}" y="${lastY - 22}" fill="#0f1c3f" font-size="9" font-weight="900">قله هدف</text>
-        `;
+        // Heights: staircase from 60px (first) to 160px (last)
+        const minH = 60, maxH = 160;
+        const isLast = (i) => i === total - 1;
 
-        svg.innerHTML = html;
+        let html = '';
+        stepData.forEach((s, i) => {
+            const h = total === 1 ? maxH : Math.round(minH + (i / (total - 1)) * (maxH - minH));
+            const state = s.checked ? 'done' : (s.isCurrent ? 'current' : 'pending');
+            const barClass = `idp-bar idp-bar-${state}`;
+            const icon = s.checked ? '✓' : (s.isCurrent ? '▲' : '○');
+            const labelClass = (state === 'pending') ? 'idp-step-label muted' : 'idp-step-label';
+            const flagHtml = isLast(i) ? `
+                <div class="idp-flag-wrap">
+                    <svg class="idp-flag-svg" width="32" height="22" viewBox="0 0 32 22">
+                        <polygon points="0,0 28,7 0,14" fill="url(#fg)" />
+                        <defs>
+                            <linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#f5b041"/>
+                                <stop offset="100%" stop-color="#d97706"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="idp-flag-pole"></div>
+                </div>` : '';
 
-        // Position Badge & Summary
+            html += `
+            <div class="idp-step-col">
+                ${flagHtml}
+                <div class="${barClass}" style="height:${h}px;">
+                    <span class="idp-bar-icon">${icon}</span>
+                </div>
+                <div class="${labelClass}">${s.duty}</div>
+                ${s.deadline ? `<div class="idp-deadline">${s.deadline}</div>` : ''}
+            </div>`;
+        });
+        container.innerHTML = html;
+
+        // Badge & summary
         if (doneCount === total) {
-            document.getElementById('idp-position-tag').textContent = 'تمام مراحل با موفقیت به پایان رسید 🎉';
-            document.getElementById('idp-summary').innerHTML = `تبریک! تمامی <b>${faNum(total)}</b> گام تعریف‌شده در برنامه توسعه فردی (IDP) تکمیل شده‌اند.`;
+            document.getElementById('idp-position-tag').textContent = 'تمام مراحل تکمیل شد 🎉';
+            document.getElementById('idp-summary').innerHTML =
+                `تبریک! تمامی <b>${faNum(total)}</b> گام برنامه توسعه فردی با موفقیت به پایان رسیده.`;
         } else {
-            const currentStepNum = doneCount + 1;
-            document.getElementById('idp-position-tag').textContent = `گام ${faNum(currentStepNum)} از ${faNum(total)} (در حال صعود)`;
-            
-            let summaryText = `موقعیت فعلی: در حال حاضر روی گام <b>«${currentStep.duty}»</b> قرار داری.`;
-            if (currentStep.deadline && currentStep.deadline !== '-') {
-                summaryText += ` مهلت اتمام این مرحله تا <b style="color:#d97706;">${currentStep.deadline}</b> است.`;
-            }
-            summaryText += `<br>وضعیت کلی: <b style="color:#059669;">${faNum(doneCount)} گام تکمیل‌شده</b> | <b style="color:#dc2626;">${faNum(total - doneCount)} گام باقی‌مانده تا قله هدف</b>.`;
-            document.getElementById('idp-summary').innerHTML = summaryText;
+            const cur = stepData[currentIdx];
+            document.getElementById('idp-position-tag').textContent =
+                `گام ${faNum(doneCount + 1)} از ${faNum(total)} (در حال صعود)`;
+            let txt = `موقعیت فعلی: گام <b>«${cur.duty}»</b>`;
+            if (cur.deadline) txt += ` — مهلت: <b style="color:#d97706;">${cur.deadline}</b>`;
+            txt += `<br>وضعیت: <b style="color:#059669;">${faNum(doneCount)} گام تکمیل‌شده</b>`
+                 + ` | <b style="color:#dc2626;">${faNum(total - doneCount)} گام باقی‌مانده</b>`;
+            document.getElementById('idp-summary').innerHTML = txt;
         }
     }
 
-    // Auto-update on checkbox change
-    document.addEventListener('change', function(e) {
+    // Auto-refresh on checkbox change
+    document.addEventListener('change', e => {
         if (e.target.type === 'checkbox') {
             updateDailyOverview();
             updateIdpRoadmap();
         }
     });
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', () => {
         updateDailyOverview();
         updateIdpRoadmap();
     });
