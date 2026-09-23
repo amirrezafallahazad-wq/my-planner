@@ -32,15 +32,14 @@
       min-height: 100vh;
     }
 
-    /* ── LOGIN ──────────────────────────────────────────── */
+    /* LOGIN */
     #login-screen {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       background: radial-gradient(ellipse at 50% 40%,
-        oklch(22% 0.05 260) 0%,
-        var(--bg) 70%);
+        oklch(22% 0.05 260) 0%, var(--bg) 70%);
     }
 
     .login-box {
@@ -58,7 +57,6 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin-bottom: 6px;
-      color: var(--text);
     }
 
     .login-box p.subtitle {
@@ -105,7 +103,7 @@
       min-height: 18px;
     }
 
-    /* ── APP SHELL ──────────────────────────────────────── */
+    /* APP */
     #app { display: none; }
 
     header {
@@ -125,7 +123,6 @@
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--accent-hi);
-      letter-spacing: -.01em;
     }
 
     header nav { display: flex; gap: 4px; }
@@ -141,8 +138,11 @@
       transition: color .15s, background .15s;
     }
 
-    header nav button:hover  { color: var(--text); background: var(--raised); }
-    header nav button.active { color: var(--text); background: var(--raised); }
+    header nav button:hover,
+    header nav button.active {
+      color: var(--text);
+      background: var(--raised);
+    }
 
     #logout-btn {
       background: none;
@@ -161,7 +161,7 @@
     .page { display: none; }
     .page.active { display: block; }
 
-    /* ── DASHBOARD ──────────────────────────────────────── */
+    /* STATS */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -201,10 +201,10 @@
     .section-title {
       font-size: 1rem;
       font-weight: 600;
-      color: var(--text);
       margin-bottom: 14px;
     }
 
+    /* DAILY */
     .daily-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -245,10 +245,9 @@
     .daily-card .pct {
       font-size: .78rem;
       color: var(--muted);
-      font-variant-numeric: tabular-nums;
     }
 
-    /* ── TABLE ──────────────────────────────────────────── */
+    /* TABLE */
     .table-wrapper {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -274,8 +273,6 @@
       text-transform: uppercase;
       letter-spacing: .05em;
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 56px;
     }
 
     tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
@@ -292,9 +289,9 @@
       font-weight: 600;
     }
 
-    .badge-done    { background: oklch(62% .18 155 / .18); color: var(--success); }
-    .badge-ongoing { background: oklch(62% .19 250 / .18); color: var(--accent-hi); }
-    .badge-pending { background: oklch(72% .18 85  / .18); color: var(--warning); }
+    .badge-done        { background: oklch(62% .18 155 / .18); color: var(--success); }
+    .badge-ongoing     { background: oklch(62% .19 250 / .18); color: var(--accent-hi); }
+    .badge-pending     { background: oklch(72% .18  85 / .18); color: var(--warning); }
     .badge-not-started { background: oklch(55% .02 260 / .18); color: var(--muted); }
 
     .btn-del {
@@ -309,7 +306,7 @@
     }
     .btn-del:hover { color: var(--danger); border-color: var(--danger); }
 
-    /* ── ADD FORM ───────────────────────────────────────── */
+    /* ADD180M */
     .add-form {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -320,7 +317,7 @@
       gap: 12px;
     }
 
-    .add-form .form-row {
+    .form-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
@@ -353,11 +350,9 @@
     .add-form textarea:focus { border-color: var(--accent); }
 
     .add-form select option { background: var(--raised); }
-
     .add-form textarea { resize: vertical; min-height: 64px; }
 
     .btn-add {
-      align-self: end;
       background: var(--accent);
       color: #fff;
       border: none;
@@ -372,10 +367,18 @@
     .btn-add:hover  { background: var(--accent-hi); }
     .btn-add:active { transform: scale(.98); }
 
-    /* ── IDP ROADMAP ────────────────────────────────────── */
+    /* ROADMAP */
+    .roadmap-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 24px 20px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+
     .roadmap {
       display: flex;
-      gap: 0;
       align-items: flex-start;
       overflow-x: auto;
       padding-bottom: 8px;
@@ -415,7 +418,6 @@
       border: 2px solid var(--border);
       background: var(--surface);
       color: var(--muted);
-      transition: all .2s;
     }
 
     .roadmap-step.done   .step-dot { background: var(--success); border-color: var(--success); color: #fff; }
@@ -430,18 +432,8 @@
     }
 
     .roadmap-step.done   .step-label { color: var(--success); }
-    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }
+    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }); font-weight: 600; }
 
-    .roadmap-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 28px 24px 20px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-    }
-
-    /* ── CHECKBOX ───────────────────────────────────────── */
     input[type="checkbox"] {
       accent-color: var(--accent);
       width: 15px;
@@ -449,15 +441,14 @@
       cursor: pointer;
     }
 
-    /* ── SCROLLBAR ──────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    :t: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
   </style>
 </head>
 <body>
 
-<!-- ════════════ LOGIN ════════════ -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <h2>Amirreza's Planner</h2>
@@ -469,7 +460,7 @@
   </div>
 </div>
 
-<!-- ════════════ APP ════════════ -->
+<!-- APP -->
 <div id="app">
   <header>
     <span class="brand">Amirreza's Planner</span>
@@ -483,7 +474,7 @@
 
   <main>
 
-    <!-- ── DASHBOARD ── -->
+    <!-- DASHBOARD -->
     <div id="page-dashboard" class="page active">
       <div class="stats-grid">
         <div class="stat-card">
@@ -517,7 +508,7 @@
       </div>
     </div>
 
-    <!-- ── TO-DO ── -->
+    <!-- TO-DO -->
     <div id="page-todo" class="page">
       <div class="section-title">Add Task</div>
       <div class="add-form">
@@ -559,7 +550,7 @@
       </div>
     </div>
 
-    <!-- ── IDP ── -->
+    <!-- IDP -->
     <div id="page-idp" class="page">
       <div class="section-title">Add IDP Phase</div>
       <div class="add-form">
@@ -619,7 +610,7 @@
 </div>
 
 <script>
-  /* ── AUTH ──────────────────────────────────────────────── */
+  /* ── AUTH ── */
   const CREDENTIALS = { user: 'amirreza', pass: '1234' };
 
   function doLogin() {
@@ -634,8 +625,11 @@
     }
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' &&
+        document.getElementById('login-screen').style.display !== 'none') {
+      doLogin();
+    }
   });
 
   function doLogout() {
@@ -646,42 +640,35 @@
     document.getElementById('login-error').textContent = '';
   }
 
-  /* ── DATA ──────────────────────────────────────────────── */
-  let todoData = [
-    { id: 1, done: false, n'flex';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('login-error').textContent = '';
-  }
-
-  /* ── DATA ──────────────────────────────────────────────── */
-  let todoData = [
-    { id: 1, done: false, n summary',       deadline: '2026-09-26', status: 'Not Started' },
-    { id: 3, done: true,  name: 'Update onboarding docs', desc: '',              deadline: '2026-09-20', status: 'Done'        },
-    { id: 4, done: false, name: 'Fix login redirect bug', desc: 'Auth module',   deadline: '2026-09-28', status: 'In Progress' },
+  /* ── DATA ── */
+  var todoData = [
+    { id: 1, done: false, name: 'Prepare weekly report',   desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
+    { id: 2, done: false, name: 'Team standup notes',      desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
+    { id: 3, done: true,  name: 'Update onboarding docs',  desc: '',                deadline: '2026-09-20', status: 'Done'         },
+    { id: 4, done: false, name: 'Fix login redirect bug',  desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
   ];
 
-  let idpData = [
-    { id: 1, done: true,  phase: 'Goal Setting',       cat: 'Planning',   date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',  notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',       cat: 'Technical',  date: '2026-07-20', res: 'Mode Analytics',   mentor: 'Tech Lead', notes: '',                 status: 'Done'        },
-    { id: 3, done: false, phase: 'Python for Analytics',cat: 'Technical',  date: '2026-08-15', res: 'Coursera course',  mentor: 'Tech Lead', notes: 'Mid-way',          status: 'In Progress' },
-    { id: 4, done: false, phase: 'Storytelling & Viz',  cat: 'Soft Skills',date: '2026-09-10', res: 'Storytelling book',mentor: 'HR',        notes: '',                 status: 'Not Started' },
-    { id: 5, done: false, phase: 'Capstone Project',    cat: 'Delivery',   date: '2026-10-01', res: '',                 mentor: 'Manager',  notes: '',                 status: 'Not Started' },
+  var idpData = [
+    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',     mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
+    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                  status: 'Done'        },
+    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',           status: 'In Progress' },
+    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                  status: 'Not Started' },
+    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',    notes: '',                  status: 'Not Started' }
   ];
 
-  let nextTodoId = 10;
-  let nextIdpId  = 10;
+  var nextTodoId = 10;
+  var nextIdpId  = 10;
 
-  /* ── NAV ───────────────────────────────────────────────── */
+  /* ── NAV ── */
   function showPage(name, btn) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('header nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('header nav button').forEach(function(b) { b.classList.remove('active'); });
     document.getElementById('page-' + name).classList.add('active');
     btn.classList.add('active');
     renderAll();
   }
 
-  /* ── RENDER ────────────────────────────────────────────── */
+  /* ── RENDER ── */
   function renderAll() {
     renderTodo();
     renderIdp();
@@ -689,40 +676,54 @@
   }
 
   function statusBadge(s) {
-    const map = { 'Done': 'badge-done', 'In Progress': 'badge-ongoing', 'Not Started': 'badge-not-started', 'Pending': 'badge-pending' };
-    return `<span class="badge ${map[s] || 'badge-not-started'}">${s}</span>`;
+    var map = {
+      'Done':        'badge-done',
+      'In Progress': 'badge-ongoing',
+      'Not Started': 'badge-not-started',
+      'Pending':     'badge-pending'
+    };
+    return '<span class="badge ' + (map[s] || 'badge-not-started') + '">' + s + '</span>';
   }
 
-  /* ── TO-DO ─────────────────────────────────────────────── */
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /* ── TO-DO ── */
   function renderTodo() {
-    const tbody = document.getElementById('todo-tbody');
+    var tbody = document.getElementById('todo-tbody');
     if (!tbody) return;
-    tbody.innerHTML = todoData.map(t => `
-      <tr id="tr-todo-${t.id}">
-        <td><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})" /></td>
-        <td style="font-weight:600">${esc(t.name)}</td>
-        <td style="color:var(--muted)">${esc(t.desc)}</td>
-        <td style="font-variant-numeric:tabular-nums">${t.deadline || '—'}</td>
-        <td>${statusBadge(t.status)}</td>
-        <td><button class="btn-del" onclick="delTodo(${t.id})">Remove</button></td>
-      </tr>`).join('');
+    tbody.innerHTML = todoData.map(function(t) {
+      return '<tr>' +
+        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
+        '<td style="font-weight:600">' + esc(t.name) + '</td>' +
+        '<td style="color:var(--muted)">' + esc(t.desc) + '</td>' +
+        '<td style="font-variant-numeric:tabular-nums">' + (t.deadline || '—') + '</td>' +
+        '<td>' + statusBadge(t.status) + '</td>' +
+        '<td><button class="btn-del" onclick="delTodo(' + t.id + ')">Remove</button></td>' +
+        '</tr>';
+    }).join('');
   }
 
   function toggleTodo(id) {
-    const t = todoData.find(x => x.id === id);
+    var t = todoData.find(function(x) { return x.id === id; });
     if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
   }
 
   function addTodo() {
-    const name = document.getElementById('todo-name').value.trim();
+    var name = document.getElementById('todo-name').value.trim();
     if (!name) return;
     todoData.push({
       id:       nextTodoId++,
       done:     false,
-      name,
+      name:     name,
       desc:     document.getElementById('todo-desc').value.trim(),
       deadline: document.getElementById('todo-deadline').value,
-      status:   document.getElementById('todo-status').value,
+      status:   document.getElementById('todo-status').value
     });
     document.getElementById('todo-name').value     = '';
     document.getElementById('todo-desc').value     = '';
@@ -732,106 +733,99 @@
   }
 
   function delTodo(id) {
-    todoData = todoData.filter(x => x.id !== id);
+    todoData = todoData.filter(function(x) { return x.id !== id; });
     renderAll();
   }
 
-  /* ── IDP ───────────────────────────────────────────────── */
+  /* ── IDP ── */
   function renderIdp() {
-    const tbody = document.getElementById('idp-tbody');
+    var tbody = document.getElementById('idp-tbody');
     if (!tbody) return;
-    tbody.innerHTML = idpData.map(t => `
-      <tr>
-        <td><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleIdp(${t.id})" /></td>
-        <td style="font-weight:600">${esc(t.phase)}</td>
-        <td>${esc(t.cat)}</td>
-        <td style="font-variant-numeric:tabular-nums">${t.date || '—'}</td>
-        <td style="color:var(--muted)">${esc(t.res)}</td>
-        <td>${esc(t.mentor)}</td>
-        <td style="color:var(--muted)">${esc(t.notes)}</td>
-        <td>${statusBadge(t.status)}</td>
-        <td><button class="btn-del" onclick="delIdp(${t.id})">Remove</button></td>
-      </tr>`).join('');
+    tbody.innerHTML = idpData.map(function(t) {
+      return '<tr>' +
+        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
+        '<td style="font-weight:600">' + esc(t.phase) + '</td>' +
+        '<td>' + esc(t.cat) + '</td>' +
+        '<td style="font-variant-numeric:tabular-nums">' + (t.date || '—') + '</td>' +
+        '<td style="color:var(--muted)">' + esc(t.res) + '</td>' +
+        '<td>' + esc(t.mentor) + '</td>' +
+        '<td style="color:var(--muted)">' + esc(t.notes) + '</td>' +
+        '<td>' + statusBadge(t.status) + '</td>' +
+        '<td><button class="btn-del" onclick="delIdp(' + t.id + ')">Remove</button></td>' +
+        '</tr>';
+    }).join('');
   }
 
   function toggleIdp(id) {
-    const t = idpData.find(x => x.id === id);
+    var t = idpData.find(function(x) { return x.id === id; });
     if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
   }
 
   function addIdp() {
-    const phase = document.getElementById('idp-phase').value.trim();
+    var phase = document.getElementById('idp-phase').value.trim();
     if (!phase) return;
     idpData.push({
       id:     nextIdpId++,
       done:   false,
-      phase,
+      phase:  phase,
       cat:    document.getElementById('idp-cat').value.trim(),
       date:   document.getElementById('idp-date').value,
       res:    document.getElementById('idp-res').value.trim(),
       mentor: document.getElementById('idp-mentor').value.trim(),
       notes:  document.getElementById('idp-notes').value.trim(),
-      status: document.getElementById('idp-status').value,
+      status: document.getElementById('idp-status').value
     });
-    ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(id => document.getElementById(id).value = '');
+    ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(function(id) {
+      document.getElementById(id).value = '';
+    });
     document.getElementById('idp-status').value = 'Not Started';
     renderAll();
   }
 
   function delIdp(id) {
-    idpData = idpData.filter(x => x.id !== id);
+    idpData = idpData.filter(function(x) { return x.id !== id; });
     renderAll();
   }
 
-  /* ── DASHBOARD ─────────────────────────────────────────── */
+  /* ── DASHBOARD ── */
   function renderDashboard() {
-    // Stats
-    const total   = todoData.length;
-    const done    = todoData.filter(t => t.done).length;
-    const ongoing = todoData.filter(t => t.status === 'In Progress').length;
-    const idpDone = idpData.filter(t => t.done).length;
-    const idpPct  = idpData.length ? Math.round(idpDone / idpData.length * 100) : 0;
+    var total   = todoData.length;
+    var done    = todoData.filter(function(t) { return t.done; }).length;
+    var ongoing = todoData.filter(function(t) { return t.status === 'In Progress'; }).length;
+    var idpDone = idpData.filter(function(t) { return t.done; }).length;
+    var idpPct  = idpData.length ? Math.round(idpDone / idpData.length * 100) : 0;
 
     document.getElementById('stat-total').textContent   = total;
     document.getElementById('stat-done').textContent    = done;
     document.getElementById('stat-ongoing').textContent = ongoing;
     document.getElementById('stat-idp').textContent     = idpPct + '%';
 
-    // Daily overview — first 4 todos
-    const overview = document.getElementById('daily-overview');
-    if (!overview) return;
-    const sample = todoData.slice(0, 4);
-    overview.innerHTML = sample.map(t => {
-      const pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
-      return `
-        <div class="daily-card">
-          <div class="task-name">${esc(t.name)}</div>
-          <div class="progress-bar">
-            <div class="progress-fill ${pct === 100 ? 'done' : ''}" style="width:${pct}%"></div>
-          </div>
-          <div class="pct">${pct}% Done</div>
-        </div>`;
-    }).join('');
+    var overview = document.getElementById('daily-overview');
+    if (overview) {
+      overview.innerHTML = todoData.slice(0, 4).map(function(t) {
+        var pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
+        return '<div class="daily-card">' +
+          '<div class="task-name">' + esc(t.name) + '</div>' +
+          '<div class="progress-bar"><div class="progress-fill ' + (pct === 100 ? 'done' : '') + '" style="width:' + pct + '%"></div></div>' +
+          '<div class="pct">' + pct + '% Done</div>' +
+          '</div>';
+      }).join('');
+    }
 
-    // Roadmap
-    const roadmap = document.getElementById('roadmap-visual');
-    if (!roadmap) return;
-    const firstActive = idpData.findIndex(t => !t.done);
-    roadmap.innerHTML = idpData.map((t, i) => {
-      let cls = '';
-      if (t.done) cls = 'done';
-      else if (i === firstActive) cls = 'active';
-      return `
-        <div class="roadmap-step ${cls}">
-          <div class="step-dot">${i + 1}</div>
-          <div class="step-label">${esc(t.phase)}</div>
-        </div>`;
-    }).join('');
-  }
-
-  /* ── UTILS ─────────────────────────────────────────────── */
-  function esc(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    var roadmap = document.getElementById('roadmap-visual');
+    if (roadmap) {
+      var firstActive = -1;
+      for (var i = 0; i < idpData.length; i++) {
+        if (!idpData[i].done) { firstActive = i; break; }
+      }
+      roadmap.innerHTML = idpData.map(function(t, i) {
+        var cls = t.done ? 'done' : (i === firstActive ? 'active' : '');
+        return '<div class="roadmap-step ' + cls + '">' +
+          '<div class="step-dot">' + (i + 1) + '</div>' +
+          '<div class="step-label">' + esc(t.phase) + '</div>' +
+          '</div>';
+      }).join('');
+    }
   }
 </script>
 </body>
