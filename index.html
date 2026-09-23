@@ -17,6 +17,7 @@
       --success:   oklch(62% 0.18  155);
       --warning:   oklch(72% 0.18   85);
       --danger:    oklch(60% 0.22   25);
+      --sidebar-w: 200px;
       --radius-sm: 6px;
       --radius-md: 12px;
       --radius-lg: 18px;
@@ -32,7 +33,7 @@
       min-height: 100vh;
     }
 
-    /* LOGIN */
+    /* ── LOGIN ── */
     #login-screen {
       display: flex;
       align-items: center;
@@ -53,17 +54,8 @@
       box-shadow: var(--shadow);
     }
 
-    .login-box h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .login-box p.subtitle {
-      font-size: .875rem;
-      color: var(--muted);
-      margin-bottom: 28px;
-    }
+    .login-box h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    .login-box p.subtitle { font-size: .875rem; color: var(--muted); margin-bottom: 28px; }
 
     .login-box input {
       width: 100%;
@@ -77,7 +69,6 @@
       outline: none;
       transition: border-color .15s;
     }
-
     .login-box input:focus { border-color: var(--accent); }
 
     .login-box button {
@@ -92,79 +83,99 @@
       cursor: pointer;
       transition: background .15s, transform .1s;
     }
-
     .login-box button:hover  { background: var(--accent-hi); }
     .login-box button:active { transform: scale(.98); }
 
-    #login-error {
-      color: var(--danger);
-      font-size: .82rem;
-      margin-top: 10px;
-      min-height: 18px;
+    #login-error { color: var(--danger); font-size: .82rem; margin-top: 10px; min-height: 18px; }
+
+    /* ── APP SHELL ── */
+    #app { display: none; min-height: 100vh; }
+
+    .shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: 100vh;
     }
 
-    /* APP */
-    #app { display: none; }
-
-    header {
+    /* ── SIDEBAR ── */
+    aside {
       background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 28px;
-      height: 56px;
+      border-right: 1px solid var(--border);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      padding: 24px 16px;
+      gap: 4px;
       position: sticky;
       top: 0;
-      z-index: 100;
+      height: 100vh;
+      overflow-y: auto;
     }
 
-    header .brand {
-      font-size: 1.05rem;
+    .brand {
+      font-size: 1rem;
       font-weight: 700;
       color: var(--accent-hi);
+      padding: 0 8px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
     }
 
-    header nav { display: flex; gap: 4px; }
+    aside nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
 
-    header nav button {
+    aside nav button {
       background: none;
       border: none;
       color: var(--muted);
-      padding: 6px 14px;
+      padding: 9px 12px;
       border-radius: var(--radius-sm);
       font-size: .875rem;
       cursor: pointer;
+      text-align: left;
       transition: color .15s, background .15s;
+      width: 100%;
     }
-
-    header nav button:hover,
-    header nav button.active {
+    aside nav button:hover,
+    aside nav button.active {
       color: var(--text);
       background: var(--raised);
     }
+    aside nav button.active { color: var(--accent-hi); font-weight: 600; }
 
     #logout-btn {
       background: none;
       border: 1px solid var(--border);
       color: var(--muted);
-      padding: 5px 14px;
+      padding: 8px 12px;
       border-radius: var(--radius-sm);
-      font-size: .8rem;
-      cursor: pointer;
-      transition: color .15s, border-color .15s;
+      font-size: .8t);
+      background: var(--raised);
     }
-    #logout-btn:hover { color: var(--danger); border-color: var(--danger); }
+    aside nav button.active { color: var(--accent-hi); font-weight: 600; }
 
-    main { padding: 28px; max-width: 1200px; margin: 0 auto; }
+    #logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: .8-y: auto;
+      padding: 28px;
+    }
+
+    main { max-width: 1100px; margin: 0 auto; }
 
     .page { display: none; }
     .page.active { display: block; }
 
-    /* STATS */
+    /* ── STATS ── */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 16px;
       margin-bottom: 28px;
     }
@@ -176,7 +187,6 @@
       padding: 20px;
       box-shadow: var(--shadow);
     }
-
     .stat-card .label {
       font-size: .78rem;
       color: var(--muted);
@@ -184,30 +194,20 @@
       letter-spacing: .06em;
       margin-bottom: 8px;
     }
-
     .stat-card .value {
       font-size: 2rem;
       font-weight: 700;
       color: var(--accent-hi);
       font-variant-numeric: tabular-nums;
     }
+    .stat-card .meta { font-size: .8rem; color: var(--muted); margin-top: 4px; }
 
-    .stat-card .meta {
-      font-size: .8rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .section-title { font-size: 1rem; font-weight: 600; margin-bottom: 14px; }
 
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 14px;
-    }
-
-    /* DAILY */
+    /* ── DAILY ── */
     .daily-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 14px;
       margin-bottom: 28px;
     }
@@ -218,12 +218,7 @@
       border-radius: var(--radius-md);
       padding: 16px 18px;
     }
-
-    .daily-card .task-name {
-      font-size: .88rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
+    .daily-card .task-name { font-size: .88rem; font-weight: 600; margin-bottom: 10px; }
 
     .progress-bar {
       height: 6px;
@@ -232,22 +227,16 @@
       overflow: hidden;
       margin-bottom: 6px;
     }
-
     .progress-fill {
       height: 100%;
       background: var(--accent);
       border-radius: 99px;
       transition: width .4s ease;
     }
-
     .progress-fill.done { background: var(--success); }
+    .daily-card .pct { font-size: .78rem; color: var(--muted); }
 
-    .daily-card .pct {
-      font-size: .78rem;
-      color: var(--muted);
-    }
-
-    /* TABLE */
+    /* ── TABLE ── */
     .table-wrapper {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -257,11 +246,7 @@
       margin-bottom: 20px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .875rem;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
 
     thead th {
       background: var(--raised);
@@ -278,7 +263,6 @@
     tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--raised); }
-
     td { padding: 10px 14px; vertical-align: middle; }
 
     .badge {
@@ -288,7 +272,6 @@
       font-size: .73rem;
       font-weight: 600;
     }
-
     .badge-done        { background: oklch(62% .18 155 / .18); color: var(--success); }
     .badge-ongoing     { background: oklch(62% .19 250 / .18); color: var(--accent-hi); }
     .badge-pending     { background: oklch(72% .18  85 / .18); color: var(--warning); }
@@ -306,7 +289,7 @@
     }
     .btn-del:hover { color: var(--danger); border-color: var(--danger); }
 
-    /* ADD180M */
+    /* ── ADD FORM ── */
     .add-form {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -319,7 +302,7 @@
 
     .form-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 12px;
     }
 
@@ -342,21 +325,21 @@
       font-size: .875rem;
       outline: none;
       transition: border-color .15s;
-      font-family: inherit;
+      r: var(--muted);
     }
 
-    .add-form input:focus,
-    .add-form select:focus,
-    .add-form textarea:focus { border-color: var(--accent); }
-
-    .add-form select option { background: var(--raised); }
-    .add-form textarea { resize: vertical; min-height: 64px; }
-
-    .btn-add {
-      background: var(--accent);
-      color: #fff;
-      border: none;
+    .add-form input,
+    .add-form select,
+    .add-form textarea {
+      background: var(--raised);
+      border: 1px solid var(--border);
       border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 8px 11px;
+      font-size: .875rem;
+      outline: none;
+      transition: border-color .15s;
+      r-radius: var(--radius-sm);
       padding: 9px 22px;
       font-size: .875rem;
       font-weight: 600;
@@ -367,7 +350,7 @@
     .btn-add:hover  { background: var(--accent-hi); }
     .btn-add:active { transform: scale(.98); }
 
-    /* ROADMAP */
+    /* ── ROADMAP ── */
     .roadmap-wrap {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -388,7 +371,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 140px;
+      min-width: 130px;
       position: relative;
     }
 
@@ -401,7 +384,6 @@
       height: 2px;
       background: var(--border);
     }
-
     .roadmap-step.done::after   { background: var(--success); }
     .roadmap-step.active::after { background: var(--accent); }
 
@@ -419,7 +401,6 @@
       background: var(--surface);
       color: var(--muted);
     }
-
     .roadmap-step.done   .step-dot { background: var(--success); border-color: var(--success); color: #fff; }
     .roadmap-step.active .step-dot { background: var(--warning); border-color: var(--warning); color: #000; box-shadow: 0 0 0 4px oklch(72% .18 85 / .25); }
 
@@ -430,9 +411,8 @@
       text-align: center;
       max-width: 110px;
     }
-
     .roadmap-step.done   .step-label { color: var(--success); }
-    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }); font-weight: 600; }
+    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }
 
     input[type="checkbox"] {
       accent-color: var(--accent);
@@ -441,7 +421,7 @@
       cursor: pointer;
     }
 
-    :t: 6px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
   </style>
@@ -462,161 +442,170 @@
 
 <!-- APP -->
 <div id="app">
-  <header>
-    <span class="brand">Amirreza's Planner</span>
-    <nav>
-      <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
-      <button onclick="showPage('todo', this)">To-Do</button>
-      <button onclick="showPage('idp', this)">IDP</button>
-    </nav>
-    <button id="logout-btn" onclick="doLogout()">Log out</button>
-  </header>
+  <div class="shell">
 
-  <main>
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="brand">Amirreza's Planner</div>
+      <nav>
+        <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
+        <button onclick="showPage('todo', this)">To-Do</button>
+        <button onclick="showPage('idp', this)">IDP</button>
+      </nav>
+      <button id="logout-btn" onclick="doLogout()">Log out</button>
+    </aside>
 
-    <!-- DASHBOARD -->
-    <div id="page-dashboard" class="page active">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="label">Total Tasks</div>
-          <div class="value" id="stat-total">0</div>
-          <div class="meta">across all lists</div>
+    <!-- CONTENT -->
+    <div class="content-area">
+      <main>
+
+        <!-- DASHBOARD -->
+        <div id="page-dashboard" class="page active">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="label">Total Tasks</div>
+              <div class="value" id="stat-total">0</div>
+              <div class="meta">across all lists</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Completed</div>
+              <div class="value" id="stat-done">0</div>
+              <div class="meta">tasks done</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">In Progress</div>
+              <div class="value" id="stat-ongoing">0</div>
+              <div class="meta">tasks ongoing</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">IDP Progress</div>
+              <div class="value" id="stat-idp">0%</div>
+              <div class="meta">phases complete</div>
+            </div>
+          </div>
+
+          <div class="section<div class="meta">tasks ongoing</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">IDP Progress</div>
+              <div class="value" id="stat-idp">0%</div>
+              <div class="meta">phases complete</div>
+            </div>
+          </div>
+
+          <div class="section id="roadmap-visual"></div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="label">Completed</div>
-          <div class="value" id="stat-done">0</div>
-          <div class="meta">tasks done</div>
+
+        <!-- TO-DO -->
+        <div id="page-todo" class="page">
+          <div class="section-title">Add Task</div>
+          <div class="add-form">
+            >Task Name
+                <input type="text" id="todo-name" placeholder="e.g.id="todo-name" placeholder="e.g.ress">In Progress</option>
+                 PRs" />
+              </label>
+              <label>Deadline
+                <input type="date" id="todo-deadline" />
+              </label>
+              <label>Status
+                <select id="todo-status">
+                  <option value="Not Started">Not Started</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Done">Done</option>
+                </select>
+              </label>
+            </div>
+            <label>Description
+              <textarea id="todo-desc" placeholder="Optional notes…"></textarea>
+            </label>
+            <button class="btn-add" onclick="addTodo()">+ Add Task</button>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Description</th>
+                  <th>Deadline</th>
+                  <th>Status</th>
+                  <th></th>
+                  <th>Done</th>
+                </tr>
+              </thead>
+              <tbody id="todo-tbody"></tbody>
+            </table>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="label">In Progress</div>
-          <div class="value" id="stat-ongoing">0</div>
-          <div class="meta">tasks ongoing</div>
+
+        <!-- IDP -->
+        <div id="page-idp" class="page">
+          <div class="section-title">Add IDP Phase</div>
+          <div class="add-form">
+            <div class="form-row">
+              <label>Phase / Step
+                <input type="text" id="idp-phase" placeholder="e.g. Learn Docker" />
+              </label>
+              <label>Category
+                <input type="text" id="idp-cat" placeholder="e.g. Technical" />
+              </label>
+              <label>Target Date
+                <input type="date" id="idp-date" />
+              </label>
+              <label>Status
+                <select id="idp-status">
+                  <option value="Not Started">Not Started</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Done">Done</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>Resources
+                <input type="text" id="idp-res" placeholder="Books, courses, links…" />
+              </label>
+              <label>Mentor / Support
+                <input type="text" id="idp-mentor" placeholder="Name or team" />
+              </label>
+              <label>Notes
+                <input type="text" id="idp-notes" placeholder="Any extra notes" />
+              </label>
+            </div>
+            <button class="btn-add" onclick="addIdp()">+ Add Phase</button>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Phase / Step</th>
+                  <th>Category</th>
+                  <th>Target Date</th>
+                  <th>Resources</th>
+                  <th>Mentor</th>
+                  <th>Notes</th>
+                  <th>Status</th>
+                  <th></th>
+                  <th>Done</th>
+                </tr>
+              </thead>
+              <tbody id="idp-tbody"></tbody>
+            </table>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="label">IDP Progress</div>
-          <div class="value" id="stat-idp">0%</div>
-          <div class="meta">phases complete</div>
-        </div>
-      </div>
 
-      <div class="section-title">Daily Overview</div>
-      <div class="daily-grid" id="daily-overview"></div>
-
-      <div class="roadmap-wrap">
-        <div class="section-title">IDP Roadmap</div>
-        <div class="roadmap" id="roadmap-visual"></div>
-      </div>
-    </div>
-
-    <!-- TO-DO -->
-    <div id="page-todo" class="page">
-      <div class="section-title">Add Task</div>
-      <div class="add-form">
-        <div class="form-row">
-          <label>Task Name
-            <input type="text" id="todo-name" placeholder="e.g. Review PRs" />
-          </label>
-          <label>Deadline
-            <input type="date" id="todo-deadline" />
-          </label>
-          <label>Status
-            <select id="todo-status">
-              <option value="Not Started">Not Started</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
-        </div>
-        <label>Description
-          <textarea id="todo-desc" placeholder="Optional notes…"></textarea>
-        </label>
-        <button class="btn-add" onclick="addTodo()">+ Add Task</button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Done</th>
-              <th>Task</th>
-              <th>Description</th>
-              <th>Deadline</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="todo-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- IDP -->
-    <div id="page-idp" class="page">
-      <div class="section-title">Add IDP Phase</div>
-      <div class="add-form">
-        <div class="form-row">
-          <label>Phase / Step
-            <input type="text" id="idp-phase" placeholder="e.g. Learn Docker" />
-          </label>
-          <label>Category
-            <input type="text" id="idp-cat" placeholder="e.g. Technical" />
-          </label>
-          <label>Target Date
-            <input type="date" id="idp-date" />
-          </label>
-          <label>Status
-            <select id="idp-status">
-              <option value="Not Started">Not Started</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
-        </div>
-        <div class="form-row">
-          <label>Resources
-            <input type="text" id="idp-res" placeholder="Books, courses, links…" />
-          </label>
-          <label>Mentor / Support
-            <input type="text" id="idp-mentor" placeholder="Name or team" />
-          </label>
-          <label>Notes
-            <input type="text" id="idp-notes" placeholder="Any extra notes" />
-          </label>
-        </div>
-        <button class="btn-add" onclick="addIdp()">+ Add Phase</button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Done</th>
-              <th>Phase / Step</th>
-              <th>Category</th>
-              <th>Target Date</th>
-              <th>Resources</th>
-              <th>Mentor</th>
-              <th>Notes</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="idp-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-  </main>
-</div>
+      </main>
+    </div><!-- /.content-area -->
+  </div><!-- /.shell -->
+</div><!-- /#app -->
 
 <script>
   /* ── AUTH ── */
-  const CREDENTIALS = { user: 'amirreza', pass: '1234' };
-
   function doLogin() {
-    const u = document.getElementById('username').value.trim();
-    const p = document.getElementById('password').value;
-    if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
+    var u = document.getElementById('username').value.trim();
+    var p = document.getElementById('password').value;
+    if (u === 'amirreza' && p === '1234') {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       renderAll();
@@ -642,18 +631,18 @@
 
   /* ── DATA ── */
   var todoData = [
-    { id: 1, done: false, name: 'Prepare weekly report',   desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
-    { id: 2, done: false, name: 'Team standup notes',      desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
-    { id: 3, done: true,  name: 'Update onboarding docs',  desc: '',                deadline: '2026-09-20', status: 'Done'         },
-    { id: 4, done: false, name: 'Fix login redirect bug',  desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
+    { id: 1, done: false, name: 'Prepare weekly report',  desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
+    { id: 2, done: false, name: 'Team standup notes',     desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
+    { id: 3, done: true,  name: 'Update onboarding docs', desc: '',                deadline: '2026-09-20', status: 'Done'         },
+    { id: 4, done: false, name: 'Fix login redirect bug', desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
   ];
 
   var idpData = [
-    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',     mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                  status: 'Done'        },
-    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',           status: 'In Progress' },
-    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                  status: 'Not Started' },
-    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',    notes: '',                  status: 'Not Started' }
+    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',     mentor: 'Manager',  notes: 'Completed on time', status: 'Done'        },
+    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    Python fo                  status: 'Done'        },
+    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead', notes: 'Mid-way',           status: 'In Progress' },
+    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',        notes: '',                  status: 'Not Started' },
+    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',   notes: '',                  status: 'Not Started' }
   ];
 
   var nextTodoId = 10;
@@ -662,35 +651,23 @@
   /* ── NAV ── */
   function showPage(name, btn) {
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-    document.querySelectorAll('header nav button').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('aside nav button').forEach(function(b) { b.classList.remove('active'); });
     document.getElementById('page-' + name).classList.add('active');
     btn.classList.add('active');
     renderAll();
   }
 
-  /* ── RENDER ── */
-  function renderAll() {
-    renderTodo();
-    renderIdp();
-    renderDashboard();
-  }
+  /* ── HELPERS ── */
+  function renderAll() { renderTodo(); renderIdp(); renderDashboard(); }
 
   function statusBadge(s) {
-    var map = {
-      'Done':        'badge-done',
-      'In Progress': 'badge-ongoing',
-      'Not Started': 'badge-not-started',
-      'Pending':     'badge-pending'
-    };
+    var map = { 'Done': 'badge-done', 'In Progress': 'badge-ongoing', 'Not Started': 'badge-not-started', 'Pending': 'badge-pending' };
     return '<span class="badge ' + (map[s] || 'badge-not-started') + '">' + s + '</span>';
   }
 
   function esc(str) {
     return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   /* ── TO-DO ── */
@@ -699,12 +676,12 @@
     if (!tbody) return;
     tbody.innerHTML = todoData.map(function(t) {
       return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
         '<td style="font-weight:600">' + esc(t.name) + '</td>' +
         '<td style="color:var(--muted)">' + esc(t.desc) + '</td>' +
         '<td style="font-variant-numeric:tabular-nums">' + (t.deadline || '—') + '</td>' +
         '<td>' + statusBadge(t.status) + '</td>' +
         '<td><button class="btn-del" onclick="delTodo(' + t.id + ')">Remove</button></td>' +
+        '<td style="text-align:center"><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
         '</tr>';
     }).join('');
   }
@@ -718,8 +695,7 @@
     var name = document.getElementById('todo-name').value.trim();
     if (!name) return;
     todoData.push({
-      id:       nextTodoId++,
-      done:     false,
+      id: nextTodoId++, done: false,
       name:     name,
       desc:     document.getElementById('todo-desc').value.trim(),
       deadline: document.getElementById('todo-deadline').value,
@@ -743,7 +719,6 @@
     if (!tbody) return;
     tbody.innerHTML = idpData.map(function(t) {
       return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
         '<td style="font-weight:600">' + esc(t.phase) + '</td>' +
         '<td>' + esc(t.cat) + '</td>' +
         '<td style="font-variant-numeric:tabular-nums">' + (t.date || '—') + '</td>' +
@@ -752,21 +727,23 @@
         '<td style="color:var(--muted)">' + esc(t.notes) + '</td>' +
         '<td>' + statusBadge(t.status) + '</td>' +
         '<td><button class="btn-del" onclick="delIdp(' + t.id + ')">Remove</button></td>' +
+        '<td style="text-align:center"><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
         '</tr>';
     }).join('');
   }
 
   function toggleIdp(id) {
     var t = idpData.find(function(x) { return x.id === id; });
-    if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
+    if (t) { t.done = !e'; renderAll(); }
   }
 
   function addIdp() {
     var phase = document.getElementById('idp-phase').value.trim();
     if (!phase) return;
+    trim();
+    if (!phase) return;
     idpData.push({
-      id:     nextIdpId++,
-      done:   false,
+      id: nextIdpId++, done: false,
       phase:  phase,
       cat:    document.getElementById('idp-cat').value.trim(),
       date:   document.getElementById('idp-date').value,
@@ -806,7 +783,8 @@
         var pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
         return '<div class="daily-card">' +
           '<div class="task-name">' + esc(t.name) + '</div>' +
-          '<div class="progress-bar"><div class="progress-fill ' + (pct === 100 ? 'done' : '') + '" style="width:' + pct + '%"></div></div>' +
+          '<div class="progress-bar"><div class="progress-fill ' + (pct === 100 ? 'done' : '') +
+          '" style="width:' + pct + '%"></div></div>' +
           '<div class="pct">' + pct + '% Done</div>' +
           '</div>';
       }).join('');
