@@ -1,647 +1,838 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amirreza's Planner</title>
-    <style>
-        :root {
-            --navy-deep: #0f1c3f;
-            --navy: #1a2a6c;
-            --navy-light: #273c75;
-            --gold: #f5b041;
-            --gold-bright: #f39c12;
-            --light-bg: #f8fafc;
-            --card-border: #e2e8f0;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --green: #059669;
-            --red: #dc2626;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Amirreza's Planner</title>
+  <style>
+    :root {
+      --bg:        oklch(14% 0.01 260);
+      --surface:   oklch(19% 0.015 260);
+      --raised:    oklch(24% 0.018 260);
+      --border:    oklch(32% 0.02  260);
+      --muted:     oklch(55% 0.02  260);
+      --text:      oklch(92% 0.01  260);
+      --accent:    oklch(62% 0.19  250);
+      --accent-hi: oklch(72% 0.19  250);
+      --success:   oklch(62% 0.18  155);
+      --warning:   oklch(72% 0.18   85);
+      --danger:    oklch(60% 0.22   25);
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow:    0 2px 12px oklch(0% 0 0 / .35);
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            display: flex;
-            min-height: 100vh;
-            background: var(--light-bg);
-            color: var(--text-dark);
-        }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-        /* ── LOGIN ── */
-        #login-screen {
-            position: fixed; inset: 0;
-            background: radial-gradient(circle at center, #243b82 0%, #0d1738 100%);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999;
-        }
-        .login-box {
-            background: rgba(255,255,255,.1738 100%);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999;
-        }
-        .login-box {
-            background: rgba(255,255,255,.px; text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,.4);
-        }
-        .login-box h2 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 24px; }
-        .login-box input {
-            width: 100%; padding: 13px 16px; margin-bottom: 14px;
-            border-radius: 8px; border: 1px solid rgba(255,255,255,.2);
-            background: rgba(255,255,255,.95); font-size: 14px; color: #111;
-            outline: none; transition: .2s;
-        }
-        .login-box input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,176,65,.3); }
-        .login-btn {
-            width: 100%; background: linear-gradient(135deg,#f5b041,#e67e22);
-            color: #0f1c3f; padding: 13px; border: none; border-radius: 8px;
-            font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 8px;
-            transition: all .25s;
-        }
-        .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(243,156,18,.4); }
+    /* ── LOGIN ──────────────────────────────────────────── */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% 40%,
+        oklch(22% 0.05 260) 0%,
+        var(--bg) 70%);
+    }
 
-        /* ── LAYOUT ── */
-        #main-app { display: none; width: 100%; min-height: 100vh; }
-        .sidebar {
-            width: 240px; flex-shrink: 0;
-            background: linear-gradient(180deg, var(--navy-deep) 0%, #15224e 100%);
-            color: #fff; padding: 28px 16px;
-            display: flex; flex-direction: column; gap: 6px;
-            box-shadow: 4px 0 16px rgba(0,0,0,.1);
-        }
-        .brand-title { color: var(--gold); font-size: 18px; font-weight: 700; margin: 0 0 28px 8px; }
-        .sidebar a {
-            display: flex; align-items: center; gap: 11px;
-            color: #cbd5e1; padding: 11px 14px; text-decoration: none;
-            font-weight: 600; font-size: 14px; border-radius: 8px;
-            cursor: pointer; transition: all .2s;
-        }
-        .sidebar a:hover, .sidebar a.active-link { background: rgba(245,176,65,.15); color: var(--gold); }
-        .sidebar a svg { flex-shrink: 0; }
+    .login-box {
+      background: oklch(20% 0.02 260 / .85);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      width: 360px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
 
-        .content { flex-grow: 1; padding: 36px 40px; overflow-y: auto; }
-        .section { display: none; }
-        .section.active { display: block; }
+    .login-box h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
 
-        /* ── DASHBOARD HEADER ── */
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
-            padding: 28px 32px; border-radius: 16px; color: #fff;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 25px rgba(26,42,108,.15);
-            border-left: 6px solid var(--gold);
-        }
-        .dashboard-header h1 { font-size: 24px; font-weight: 700; }
-        .dashboard-header p { margin-top: 6px; color: #cbd5e1; font-size: 14px; }
+    .login-box p.subtitle {
+      font-size: .875rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
 
-        /* ── STAT CARDS ── */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-            gap: 18px; margin-bottom: 24px;
-        }
-        .stat-card {
-            background: #fff; padding: 22px 24px; border-radius: 14px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 4px 15px rgba(0,0,0,.03);
-            display: flex; justify-content: space-between; align-items: center;
-            border-top: 4px solid #cbd5e1;
-            transition: transform .2s, box-shadow .2s;
-        }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.07); }
-        .stat-card.card-active    { border-top-color: #3b82f6; }
-        .stat-card.card-completed { border-top-color: #10b981; }
-        .stat-card.card-idp       { border-top-color: var(--gold); }
+    .login-box input {
+      width: 100%;
+      padding: 11px 14px;
+      margin-bottom: 14px;
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: .9rem;
+      outline: none;
+      transition: border-color .15s;
+    }
 
-        .stat-title { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
-        .stat-value { font-size: 30px; font-weight: 800; color: var(--navy-deep); line-height: 1; }
-        .stat-icon {
-            width: 52px; height: 52px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .card-active   .stat-icon { background: #eff6ff; color: #2563eb; }
-        .card-completed .stat-icon { background: #ecfdf5; color: #059669; }
-        .card-idp       .stat-icon { background: #fffbeb; color: #d97706; }
-        .stat-icon svg { width: 28px; height: 28px; }
+    .login-box input:focus { border-color: var(--accent); }
 
-        /* ── PANELS ── */
-        .card-panel {
-            background: #fff; border-radius: 16px; padding: 24px 28px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 4px 20px rgba(0,0,0,.04);
-            margin-bottom: 24px;
-        }
-        .panel-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 16px;
-        }
-        .panel-header h2 { font-size: 17px; color: var(--navy-deep); font-weight: 700; }
-        .panel-tag {
-            background: #eff6ff; color: #1d4ed8;
-            padding: 5px 14px; border-radius: 20px;
-            font-size: 13px; font-weight: 700; letter-spacing: .3px;
-        }
+    .login-box button {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
 
-        /* progress bar */
-        .prog-track {
-            width: 100%; height: 18px; background: #eef2f7;
-            border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0;
-        }
-        .prog-fill {
-            height: 100%; border-radius: 10px;
-            background: linear-gradient(90deg,#f5b041,#d97706);
-            transition: width .8s ease;
-        }
+    .login-box button:hover  { background: var(--accent-hi); }
+    .login-box button:active { transform: scale(.98); }
 
-        /* ── IDP ROADMAP ── */
-        .idp-roadmap-wrap {
-            background: linear-gradient(180deg,#f0f4ff,#e8eef8);
-            border-radius: 14px; border: 1px solid #d4ddf0;
-            padding: 24px 20px 16px; overflow: hidden;
-        }
-        .idp-steps {
-            display: flex; align-items: flex-end; justify-content: center;
-            gap: 0; height: 180px; direction: ltr;
-        }
-        .idp-step-col {
-            display: flex; flex-direction: column; align-items: center;
-            flex: 1; max-width: 160px; position: relative;
-        }
-        .idp-bar {
-            width: 72%; border-radius: 8px 8px 0 0; position: relative;
-            display: flex; align-items: flex-start; justify-content: center;
-            padding-top: 8px; cursor: default;
-        }
-        .idp-bar-done    { background: linear-gradient(180deg,#34d399,#059669); }
-        .idp-bar-current { background: linear-gradient(180deg,#fcd34d,#d97706); }
-        .idp-bar-pending { background: linear-gradient(180deg,#94a3b8,#64748b); opacity: .55; }
-        .idp-bar-current::after {
-            content: ''; position: absolute; inset: 0; border-radius: 8px 8px 0 0;
-            box-shadow: 0 0 0 3px rgba(245,176,65,.55);
-        }
-        .idp-bar-icon { font-size: 18px; line-height: 1; }
-        .idp-step-label {
-            margin-top: 10px; font-size: 11.5px; font-weight: 700;
-            color: var(--navy-deep); text-align: center; line-height: 1.4; padding: 0 4px;
-        }
-        .idp-step-label.muted { color: var(--text-muted); font-weight: 500; }
-        .idp-deadline { font-size: 10px; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
-        .idp-flag-wrap {
-            position: absolute; top: -42px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .idp-flag-pole { width: 3px; height: 32px; background: #475569; border-radius: 2px; }
+    #login-error {
+      color: var(--danger);
+      font-size: .82rem;
+      margin-top: 10px;
+      min-height: 18px;
+    }
 
-        .idp-summary-box {
-            margin-top: 16px; font-size: 14px; color: var(--navy-deep);
-            font-weight: 600; line-height: 2;
-            background: #f8fafc; padding: 14px 18px; border-radius: 10px;
-            border: 1px solid #e2e8f0;
-        }
+    /* ── APP SHELL ──────────────────────────────────────── */
+    #app { display: none; }
 
-        /* ── SECTION HEADERS ── */
-        .section-title { color: var(--navy); font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-        /* ── ADD TASK FORM ── */
-        .add-form {
-            background: #fff; border: 1px solid var(--card-border);
-            border-radius: 14px; padding: 20px 24px; margin-bottom: 22px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.03);
-        }
-        .add-form h3 { font-size: 15px; color: var(--navy); margin-bottom: 14px; font-weight: 700; }
-        .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
-        .form-row input, .form-row select {
-            flex: 1; min-width: 140px; padding: 10px 14px;
-            border: 1px solid #e2e8f0; border-radius: 8px;
-            font-size: 13px; color: var(--text-dark); background: #fff;
-            outline: none; transition: .2s;
-        }
-        .form-row input:focus, .form-row select:focus {
-            border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,42,108,.1);
-        }
-        .btn-add {
-            background: linear-gradient(135deg,var(--navy),var(--navy-light));
-            color: #fff; padding: 10px 22px; border: none; border-radius: 8px;
-            font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s;
-            white-space: nowrap;
-        }
-        .btn-add:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,42,108,.3); }
+    header .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-hi);
+      letter-spacing: -.01em;
+    }
 
-        /* ── TABLES ── */
-        .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--card-border); }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td {
-            padding: 13px 16px; text-align: left;
-            font-size: 13px; border-bottom: 1px solid #f1f5f9;
-        }
-        th { background: var(--navy); color: #fff; font-weight: 600; font-size: 13px; }
-        th:first-child { border-radius: 0; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #f8fafc; }
-        input[type="checkbox"] { width: 17px; height: 17px; cursor: pointer; accent-color: var(--navy); }
+    header nav { display: flex; gap: 4px; }
 
-        .badge-status {
-            display: inline-block; padding: 3px 10px; border-radius: 12px;
-            font-size: 11.5px; font-weight: 700;
-        }
-        .badge-inprogress { background: #eff6ff; color: #1d4ed8; }
-        .badge-pending    { background: #fef9c3; color: #92400e; }
-        .badge-done       { background: #ecfdf5; color: #065f46; }
+    header nav button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: .875rem;
+      cursor: pointer;
+      transition: color .15s, background .15s;
+    }
 
-        .btn-del {
-            background: none; border: none; cursor: pointer;
-            color: #94a3b8; font-size: 16px; padding: 4px 6px;
-            border-radius: 6px; transition: color .15s, background .15s;
-        }
-        .btn-del:hover { color: var(--red); background: #fef2f2; }
-    </style>
+    header nav button:hover  { color: var(--text); background: var(--raised); }
+    header nav button.active { color: var(--text); background: var(--raised); }
+
+    #logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 5px 14px;
+      border-radius: var(--radius-sm);
+      font-size: .8rem;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    #logout-btn:hover { color: var(--danger); border-color: var(--danger); }
+
+    main { padding: 28px; max-width: 1200px; margin: 0 auto; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── DASHBOARD ──────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card .label {
+      font-size: .78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-hi);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-card .meta {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .daily-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .daily-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+    }
+
+    .daily-card .task-name {
+      font-size: .88rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--raised);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+
+    .progress-fill.done { background: var(--success); }
+
+    .daily-card .pct {
+      font-size: .78rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── TABLE ──────────────────────────────────────────── */
+    .table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .875rem;
+    }
+
+    thead th {
+      background: var(--raised);
+      padding: 11px 14px;
+      text-align: left;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 56px;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--raised); }
+
+    td { padding: 10px 14px; vertical-align: middle; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 99px;
+      font-size: .73rem;
+      font-weight: 600;
+    }
+
+    .badge-done    { background: oklch(62% .18 155 / .18); color: var(--success); }
+    .badge-ongoing { background: oklch(62% .19 250 / .18); color: var(--accent-hi); }
+    .badge-pending { background: oklch(72% .18 85  / .18); color: var(--warning); }
+    .badge-not-started { background: oklch(55% .02 260 / .18); color: var(--muted); }
+
+    .btn-del {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--muted);
+      padding: 3px 9px;
+      border-radius: var(--radius-sm);
+      font-size: .78rem;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .btn-del:hover { color: var(--danger); border-color: var(--danger); }
+
+    /* ── ADD FORM ───────────────────────────────────────── */
+    .add-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .add-form .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .add-form label {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .add-form input,
+    .add-form select,
+    .add-form textarea {
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 8px 11px;
+      font-size: .875rem;
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+    }
+
+    .add-form input:focus,
+    .add-form select:focus,
+    .add-form textarea:focus { border-color: var(--accent); }
+
+    .add-form select option { background: var(--raised); }
+
+    .add-form textarea { resize: vertical; min-height: 64px; }
+
+    .btn-add {
+      align-self: end;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 9px 22px;
+      font-size: .875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+      width: fit-content;
+    }
+    .btn-add:hover  { background: var(--accent-hi); }
+    .btn-add:active { transform: scale(.98); }
+
+    /* ── IDP ROADMAP ────────────────────────────────────── */
+    .roadmap {
+      display: flex;
+      gap: 0;
+      align-items: flex-start;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .roadmap-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 140px;
+      position: relative;
+    }
+
+    .roadmap-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .roadmap-step.done::after   { background: var(--success); }
+    .roadmap-step.active::after { background: var(--accent); }
+
+    .step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      z-index: 1;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      transition: all .2s;
+    }
+
+    .roadmap-step.done   .step-dot { background: var(--success); border-color: var(--success); color: #fff; }
+    .roadmap-step.active .step-dot { background: var(--warning); border-color: var(--warning); color: #000; box-shadow: 0 0 0 4px oklch(72% .18 85 / .25); }
+
+    .step-label {
+      margin-top: 10px;
+      font-size: .75rem;
+      color: var(--muted);
+      text-align: center;
+      max-width: 110px;
+    }
+
+    .roadmap-step.done   .step-label { color: var(--success); }
+    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }
+
+    .roadmap-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 24px 20px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── CHECKBOX ───────────────────────────────────────── */
+    input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    /* ── SCROLLBAR ──────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ════════════ LOGIN ════════════ -->
 <div id="login-screen">
-    <div class="login-box">
-        <h2>Login to Amirreza's Planner</h2>
-        <input type="text" id="username" placeholder="Username" autocomplete="off">
-        <input type="password" id="password" placeholder="Password">
-        <button class="login-btn" onclick="login()">Log In</button>
-    </div>
+  <div class="login-box">
+    <h2>Amirreza's Planner</h2>
+    <p class="subtitle">Sign in to continue</p>
+    <input type="text"     id="username" placeholder="Username" autocomplete="username" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+    <button onclick="doLogin()">Log In</button>
+    <div id="login-error"></div>
+  </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="main-app">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="brand-title">My Planner</div>
-        <a id="nav-dashboard" class="active-link" onclick="showSection('dashboard')">
-            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            Dashboard
-        </a>
-        <a id="nav-todo" onclick="showSection('todo')">
-            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-            Todo Diurnus
-        </a>
-        <a id="nav-idp" onclick="showSection('idp')">
-            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            My IDP Templa 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            My IDP Template
-        </a>
+<!-- ════════════ APP ════════════ -->
+<div id="app">
+  <header>
+    <span class="brand">Amirreza's Planner</span>
+    <nav>
+      <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
+      <button onclick="showPage('todo', this)">To-Do</button>
+      <button onclick="showPage('idp', this)">IDP</button>
+    </nav>
+    <button id="logout-btn" onclick="doLogout()">Log out</button>
+  </header>
+
+  <main>
+
+    <!-- ── DASHBOARD ── -->
+    <div id="page-dashboard" class="page active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">Total Tasks</div>
+          <div class="value" id="stat-total">0</div>
+          <div class="meta">across all lists</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Completed</div>
+          <div class="value" id="stat-done">0</div>
+          <div class="meta">tasks done</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">In Progress</div>
+          <div class="value" id="stat-ongoing">0</div>
+          <div class="meta">tasks ongoing</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">IDP Progress</div>
+          <div class="value" id="stat-idp">0%</div>
+          <div class="meta">phases complete</div>
+        </div>
+      </div>
+
+      <div class="section-title">Daily Overview</div>
+      <div class="daily-grid" id="daily-overview"></div>
+
+      <div class="roadmap-wrap">
+        <div class="section-title">IDP Roadmap</div>
+        <div class="roadmap" id="roadmap-visual"></div>
+      </div>
     </div>
 
-    <!-- Content -->
-    <div class="content">
-
-        <!-- ── DASHBOARD ── -->
-        <div id="dashboard" class="section active">
-            <div class="dashboard-header">
-                <h1>Welcome to Amirreza's Planner</h1>
-                <div class="stat-grid">
-                <div class="stat-card card-active">
-                    <div>
-                        <div class="stat-title">Active Tasks Today</div>
-                        <div class="stat-value" id="stat-active">0</div>
-                    </div>
-                    <div class="stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    </div>
-                </div>
-                <div class="stat-card card-completed">
-                    <div>
-                        <div class="stat-title">Completed Tasks</div>
-                        <div class="stat-value" id="stat-done">0</div>
-                    </div>
-                    <div class="stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    </div>
-                </div>
-                <div class="stat-card card-idp">
-                    <div>
-                        <div class="stat-title">IDP Goals in Progress</div>
-                        <div class="stat-value" id="stat-idp">0</div>
-                    </div>
-                    <div class="stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Daily Overview -->
-            <div class="card-panel">
-                <div class="panel-header">
-                    <h2>Today's Performance Overview</h2>
-                    <span class="panel-tag" id="daily-percent-tag">0% Done</span>
-                </div>
-                <div class="prog-track">
-                    <div class="prog-fill" id="daily-progress-bar" style="width:0%"></div>
-                </div>
-            </div>
-
-            <!-- IDP Roadmap -->
-            <div class="card-panel">
-                <div class="panel-header">
-                    <h2>IDP Development Ladder &amp; Goal Path</h2>
-                    <span class="panel-tag" id="idp-position-tag">Calculating...</span>
-                </div>
-                <div class="idp-roadmap-wrap">
-                    <div class="idp-steps" id="idp-steps-container"></div>
-                </div>
-                <div class="idp-summary-box" id="idp-summary"></div>
-            </div>
+    <!-- ── TO-DO ── -->
+    <div id="page-todo" class="page">
+      <div class="section-title">Add Task</div>
+      <div class="add-form">
+        <div class="form-row">
+          <label>Task Name
+            <input type="text" id="todo-name" placeholder="e.g. Review PRs" />
+          </label>
+          <label>Deadline
+            <input type="date" id="todo-deadline" />
+          </label>
+          <label>Status
+            <select id="todo-status">
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
+            </select>
+          </label>
         </div>
+        <label>Description
+          <textarea id="todo-desc" placeholder="Optional notes…"></textarea>
+        </label>
+        <button class="btn-add" onclick="addTodo()">+ Add Task</button>
+      </div>
 
-        <!-- ── TODO ── -->
-        <div id="todo" class="section">
-            <h2 class="section-title">Todo Diurnus</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Done</th>
+              <th>Task</th>
+              <th>Description</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="todo-tbody"></tbody>
+        </table>
+      </div>
+    </div>
 
-            <!-- Add Task Form -->
-            <div class="add-form">
-                <h3>+ Add New Task</h3>
-                <div class="form-row">
-                    <input type="text"   id="todo-name"   placeholder="Task name *">
-                    <input type="text"   id="todo-desc"   placeholder="Description">
-                    <input type="date"   id="todo-date">
-                    <select id="todo-status">
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Done">Done</option>
-                    </select>
-                    <button class="btn-add" onclick="addTodo()">Add Task</button>
-                </div>
-            </div>
-
-            <div class="table-wrap">
-                <table id="todo-table">
-                    <thead>
-                        <tr>
-                            <th>Task Name</th>
-                            <th>Description</th>
-                            <th>Deadline</th>
-                            <th>Status</th>
-                            <th>Done</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody id="todo-body"></tbody>
-                </table>
-            </div>
+    <!-- ── IDP ── -->
+    <div id="page-idp" class="page">
+      <div class="section-title">Add IDP Phase</div>
+      <div class="add-form">
+        <div class="form-row">
+          <label>Phase / Step
+            <input type="text" id="idp-phase" placeholder="e.g. Learn Docker" />
+          </label>
+          <label>Category
+            <input type="text" id="idp-cat" placeholder="e.g. Technical" />
+          </label>
+          <label>Target Date
+            <input type="date" id="idp-date" />
+          </label>
+          <label>Status
+            <select id="idp-status">
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
+            </select>
+          </label>
         </div>
-
-        <!-- ── IDP ── -->
-        <div id="idp" class="section">
-            <h2 class="section-title">My IDP Template</h2>
-
-            <!-- Add IDP Row Form -->
-            <div class="add-form">
-                <h3>+ Add New IDP Step</h3>
-                <div class="form-row">
-                    <input type="text" id="idp-duty"       placeholder="Supervisor's Duties *">
-                    <input type="text" id="idp-char"       placeholder="Supervisor Characteristics">
-                    <input type="text" id="idp-qualitess"     placeholder="Accessinges I Possess">
-                    <input type="text" id="idp-access"     placeholder="Accessing other features">
-                    <input type="text" id="idp-resources"  placeholder="Usable resources">
-                    <input type="text" id="idp-dl"         placeholder="Deadline (e.g. 1405-12-01)">
-                    <input type="text" id="idp-action"     placeholder="Executive action">
-                    <button class="btn-add" onclick="addIdpRow()">Add Step</button>
-                </div>
-            </div>
-
-            )">
-                    <input type="text" id="idp-action"     placeholder="Executive action">
-                    <button class="btn-add" onclick="addIdpRow()">Add Step</button>
-                </div>
-            </div>
-
-            <div class="table-wrap">sable resources</th>
-                            <th>Deadline</th>
-                            <th>Executive action</th>
-                            <th>Final status</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody id="idp-body"></tbody>
-                </table>
-            </div>
+        <div class="form-row">
+          <label>Resources
+            <input type="text" id="idp-res" placeholder="Books, courses, links…" />
+          </label>
+          <label>Mentor / Support
+            <input type="text" id="idp-mentor" placeholder="Name or team" />
+          </label>
+          <label>Notes
+            <input type="text" id="idp-notes" placeholder="Any extra notes" />
+          </label>
         </div>
+        <button class="btn-add" onclick="addIdp()">+ Add Phase</button>
+      </div>
 
-    </div><!-- /content -->
-</div><!-- /main-app -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Done</th>
+              <th>Phase / Step</th>
+              <th>Category</th>
+              <th>Target Date</th>
+              <th>Resources</th>
+              <th>Mentor</th>
+              <th>Notes</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="idp-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
 
 <script>
-// ── initial data ────────────────────────────────────────────────────────────
-const todoData = [
-    { name:'KPI Report',          desc:'Prepare performance tracking sheet',      date:'2026-09-25', status:'In Progress', done:false },
-    { name:'Review IDP',          desc:'Analyze supervisory competencies',         date:'2026-09-28', status:'Pending',     done:false },
-    { name:'Team Standup',        desc:'Weekly operations sync',                   date:'2026-09-23', status:'Done',        done:true  },
-    { name:'Ticket Backlog Check',desc:'Check Azki seller pending cases',          date:'2026-09-24', status:'Pending',     done:false },
-];
+  /* ── AUTH ──────────────────────────────────────────────── */
+  const CREDENTIALS = { user: 'amirreza', pass: '1234' };
 
-const idpData = [
-    { duty:'Foundations & Principles',  char:'Accountability',         quality:'Analytical & Persistent',  access:'System access',        resources:'Docs & data',           dl:'1405-07-15', action:'Complete initial training',           done:true  },
-    { duty:'Skill & Mastery',           char:'Problem-solving',        quality:'High focus',                access:'Evaluation panel',     resources:'Experience-sharing sessions', dl:'1405-08-30', action:'Monitor ',        quality:'High focus',                access:'Evaluation panel',     resources:'Experience-sharing sessions', dl:'1405-08-30', action:'Monitor  team',     dl:'1405-10-15', action:'Optimize issuance & tickets',         done:false },
-    { duty:'Summit Goal (IDP Complete)',char:'Organizational leadership',quality:'Strategic vision',         access:'Senior level',         resources:'Comprehensive dashboard',dl:'1405-12-29', action:'Comprehensive final evaluation',      done:false },
-];
-
-// ── login ────────────────────────────────────────────────────────────────────
-function login() {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-app').style.display = 'flex';
-    renderTodo();
-    renderIdp();
-}
-
-// ── nav ──────────────────────────────────────────────────────────────────────
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.sidebar a').forEach(a => a.classL────
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active-link'));
-    document.getElementById(id).classList.add('active');
-    document.getElementById('nav-' + id).classList.add('active-link');
-}
-
-// ── = '';
-    todoData.forEach((t, i) => {
-        const statusClass = { 'In Progress':'badge-inprogress','Pending':'badge-pending','Done':'badge-done' }[t.status] || 'badge-pending';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><strong>${esc(t.name)}</strong></td>
-            <td>${esc(t.desc)}</td>
-            <td>${esc(t.date)}</td>
-            <td><span class="badge-status ${statusClass}">${esc(t.status)}</span></td>
-            <td><input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo(${i},this.checked)"></td>
-            <td><button class="btn-del" onclick="deleteTodo(${i})" title="Remove">✕</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-    updateDashboard();
-}
-
-function addTodo() {
-    const name   = document.getElementById('todo-name').value.trim();
-    if (!name) { document.getElementById('todo-name').focus(); return; }
-    const desc   = document.getElementById('todo-desc').value.trim();
-    const date   = document.getElementById('todo-date').value;
-    const status = document.getElementById('todo-status').value;
-    todoData.push({ name, desc, date, status, done: status === 'Done' });
-    document.getElementById('todo-name').value   = '';
-    document.getElementById('todo-desc').value   = '';
-    document.getElementById('todo-date').value   = '';
-    document.getElementById('todo-status').value = 'Pending';
-    renderTodo();
-}
-
-function toggleTodo(i, checked) {
-    todoData[i].done = checked;
-    if (checked && todoData[i].status !== 'Done') todoData[i].status = 'Done';
-    if (!checked && todoData[i].status === 'Done') todoData[i].status = 'Pending';
-    renderTodo();
-}
-
-function deleteTodo(i) {
-    todoData.splice(i, 1);
-    renderTodo();
-}
-
-// ── IDP render ───────────────────────────────────────────────────────────────
-function renderIdp() {
-    const tbody = document.getElementById('idp-body');
-    tbody.innerHTML = '';
-    idpData.forEach((r, i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${esc(r.duty)}</td>
-            <td>${esc(r.char)}</td>
-            <td>${esc(r.quality)}</td>
-            <td>${esc(r.access)}</td>
-            <td>${esc(r.resources)}</td>
-            <td>${esc(r.dl)}</td>
-            <td>${esc(r.action)}</td>
-            <td><input type="checkbox" ${r.done?'checked':''} onchange="toggleIdp(${i},this.checked)"></td>
-            <td><button class="btn-del" onclick="deleteIdp(${i})" title="Remove">✕</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-    updateDashboard();
-}
-
-function addIdpRow() {
-    const duty = document.getElementById('idp-duty').value.trim();
-    if (!duty) { document.getElementById('idp-duty').focus(); return; }
-    idpData.push({
-        duty,
-        char:      document.getElementById('idp-char').value.trim(),
-        quality:   document.getElementById('idp-quality').value.trim(),
-        access:    document.getElementById('idp-access').value.trim(),
-        resources: document.getElementById('idp-resources').value.trim(),
-        dl:        document.getElementById('idp-dl').value.trim(),
-        action:    document.getElementById('idp-action').value.trim(),
-        done:      false,
-    });
-    ['idp-duty','idp-char','idp-quality','idp-access','idp-resources','idp-dl','idp-action']
-        .forEach(id => document.getElementById(id).value = '');
-    renderIdp();
-}
-
-function toggleIdp(i, checked) {
-    idpData[i].done = checked;
-    renderIdp();
-}
-
-function deleteIdp(i) {
-    idpData.splice(i, 1);
-    renderIdp();
-}
-
-// ── Dashboard update ─────────────────────────────────────────────────────────
-function updateDashboard() {
-    // Todo stats
-    const done   = todoData.filter(t => t.done).length;
-    const total  = todoData.length;
-    const active = total - done;
-    const pct    = total ? Math.round((done / total) * 100) : 0;
-    document.getElementById('stat-active').textContent = active;
-    document.getElementById('stat-done').textContent   = done;
-    document.getElementById('daily-progress-bar').style.width = pct + '%';
-    document.getElementById('daily-percent-tag').textContent  = pct + '% Done';
-
-    // IDP roadmap
-    updateIdpRoadmap();
-}
-
-function updateIdpRoadmap() {
-    const total = idpData.length;
-    document.getElementById('stat-idp').textContent = total;
-
-    const container = document.getElementById('idp-steps-container');
-    if (!container || total === 0) { container.innerHTML = ''; return; }
-
-    let doneCount  = 0;
-    let currentIdx = null;
-    idpData.forEach((s, i) => {
-        if (s.done) doneCount++;
-        else if (currentIdx === null) currentIdx = i;
-    });
-
-    const minH = 60, maxH = 160;
-    let html = '';
-    idpData.forEach((s, i) => {
-        const h = total === 1 ? maxH : Math.round(minH + (i / (total - 1)) * (maxH - minH));
-        const isCurrent = (i === currentIdx);
-        const state = s.done ? 'done' : (isCurrent ? 'current' : 'pending');
-        const icon  = s.done ? '✓'  : (isCurrent ? '▲' : '○');
-        const labelClass = state === 'pending' ? 'idp-step-label muted' : 'idp-step-label';
-        const isLast = i === total - 1;
-        const flagHtml = isLast ? `
-            <div class="idp-flag-wrap">
-                <svg width="30" height="20" viewBox="0 0 30 20">
-                    <defs><linearGradient id="fg"><stop offset="0%" stop-color="#f5b041"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs>
-                    <polygon points="0,0 28,7 0,14" fill="url(#fg)"/>
-                </svg>
-                <div class="idp-flag-pole"></div>
-            </div>` : '';
-        html += `
-        <div class="idp-step-col">
-            ${flagHtml}
-            <div class="idp-bar idp-bar-${state}" style="height:${h}px;">
-                <span class="idp-bar-icon">${icon}</span>
-            </div>
-            <div class="${labelClass}">${esc(s.duty)}</div>
-            ${s.dl ? `<div class="idp-deadline">${esc(s.dl)}</div>` : ''}
-        </div>`;
-    });
-    container.innerHTML = html;
-
-    // Summary & badge
-    if (doneCount === total) {
-        document.getElementById('idp-position-tag').textContent = 'All steps complete 🎉';
-        document.getElementById('idp-summary').innerHTML =
-            `Congratulations! All <b>${total}</b> IDP steps have been completed.`;
-    } else if (currentIdx !== null) {
-        const cur = idpData[currentIdx];
-        document.getElementById('idp-position-tag').textContent =
-            `Step ${doneCount + 1} of ${total} (climbing)`;
-        let txt = `Current step: <b>"${esc(cur.duty)}"</b>`;
-        if (cur.dl) txt += ` — Deadline: <b style="color:#d97706;">${esc(cur.dl)}</b>`;
-        txt += `<br>Progress: <b style="color:#059669;">${doneCount} completed</b> | `
-             + `<b style="color:#dc2626;">${total - doneCount} remaining</b>`;
-        document.getElementById('idp-summary').innerHTML = txt;
+  function doLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value;
+    if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      renderAll();
     } else {
-        document.getElementById('idp-position-tag').textContent = 'No steps yet';
-        document.getElementById('idp-summary').innerHTML = 'Add IDP steps to track your progress.';
+      document.getElementById('login-error').textContent = 'Incorrect username or password.';
     }
-}
+  }
 
-// ── util ─────────────────────────────────────────────────────────────────────
-function esc(str) {
-    return String(str || '')
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+  });
 
-window.addEventListener('load', () => { renderTodo(); renderIdp(); });
+  function doLogout() {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('login-error').textContent = '';
+  }
+
+  /* ── DATA ──────────────────────────────────────────────── */
+  let todoData = [
+    { id: 1, done: false, n'flex';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('login-error').textContent = '';
+  }
+
+  /* ── DATA ──────────────────────────────────────────────── */
+  let todoData = [
+    { id: 1, done: false, n summary',       deadline: '2026-09-26', status: 'Not Started' },
+    { id: 3, done: true,  name: 'Update onboarding docs', desc: '',              deadline: '2026-09-20', status: 'Done'        },
+    { id: 4, done: false, name: 'Fix login redirect bug', desc: 'Auth module',   deadline: '2026-09-28', status: 'In Progress' },
+  ];
+
+  let idpData = [
+    { id: 1, done: true,  phase: 'Goal Setting',       cat: 'Planning',   date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',  notes: 'Completed on time', status: 'Done'        },
+    { id: 2, done: true,  phase: 'SQL Deep Dive',       cat: 'Technical',  date: '2026-07-20', res: 'Mode Analytics',   mentor: 'Tech Lead', notes: '',                 status: 'Done'        },
+    { id: 3, done: false, phase: 'Python for Analytics',cat: 'Technical',  date: '2026-08-15', res: 'Coursera course',  mentor: 'Tech Lead', notes: 'Mid-way',          status: 'In Progress' },
+    { id: 4, done: false, phase: 'Storytelling & Viz',  cat: 'Soft Skills',date: '2026-09-10', res: 'Storytelling book',mentor: 'HR',        notes: '',                 status: 'Not Started' },
+    { id: 5, done: false, phase: 'Capstone Project',    cat: 'Delivery',   date: '2026-10-01', res: '',                 mentor: 'Manager',  notes: '',                 status: 'Not Started' },
+  ];
+
+  let nextTodoId = 10;
+  let nextIdpId  = 10;
+
+  /* ── NAV ───────────────────────────────────────────────── */
+  function showPage(name, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('header nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    btn.classList.add('active');
+    renderAll();
+  }
+
+  /* ── RENDER ────────────────────────────────────────────── */
+  function renderAll() {
+    renderTodo();
+    renderIdp();
+    renderDashboard();
+  }
+
+  function statusBadge(s) {
+    const map = { 'Done': 'badge-done', 'In Progress': 'badge-ongoing', 'Not Started': 'badge-not-started', 'Pending': 'badge-pending' };
+    return `<span class="badge ${map[s] || 'badge-not-started'}">${s}</span>`;
+  }
+
+  /* ── TO-DO ─────────────────────────────────────────────── */
+  function renderTodo() {
+    const tbody = document.getElementById('todo-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = todoData.map(t => `
+      <tr id="tr-todo-${t.id}">
+        <td><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})" /></td>
+        <td style="font-weight:600">${esc(t.name)}</td>
+        <td style="color:var(--muted)">${esc(t.desc)}</td>
+        <td style="font-variant-numeric:tabular-nums">${t.deadline || '—'}</td>
+        <td>${statusBadge(t.status)}</td>
+        <td><button class="btn-del" onclick="delTodo(${t.id})">Remove</button></td>
+      </tr>`).join('');
+  }
+
+  function toggleTodo(id) {
+    const t = todoData.find(x => x.id === id);
+    if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
+  }
+
+  function addTodo() {
+    const name = document.getElementById('todo-name').value.trim();
+    if (!name) return;
+    todoData.push({
+      id:       nextTodoId++,
+      done:     false,
+      name,
+      desc:     document.getElementById('todo-desc').value.trim(),
+      deadline: document.getElementById('todo-deadline').value,
+      status:   document.getElementById('todo-status').value,
+    });
+    document.getElementById('todo-name').value     = '';
+    document.getElementById('todo-desc').value     = '';
+    document.getElementById('todo-deadline').value = '';
+    document.getElementById('todo-status').value   = 'Not Started';
+    renderAll();
+  }
+
+  function delTodo(id) {
+    todoData = todoData.filter(x => x.id !== id);
+    renderAll();
+  }
+
+  /* ── IDP ───────────────────────────────────────────────── */
+  function renderIdp() {
+    const tbody = document.getElementById('idp-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = idpData.map(t => `
+      <tr>
+        <td><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleIdp(${t.id})" /></td>
+        <td style="font-weight:600">${esc(t.phase)}</td>
+        <td>${esc(t.cat)}</td>
+        <td style="font-variant-numeric:tabular-nums">${t.date || '—'}</td>
+        <td style="color:var(--muted)">${esc(t.res)}</td>
+        <td>${esc(t.mentor)}</td>
+        <td style="color:var(--muted)">${esc(t.notes)}</td>
+        <td>${statusBadge(t.status)}</td>
+        <td><button class="btn-del" onclick="delIdp(${t.id})">Remove</button></td>
+      </tr>`).join('');
+  }
+
+  function toggleIdp(id) {
+    const t = idpData.find(x => x.id === id);
+    if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
+  }
+
+  function addIdp() {
+    const phase = document.getElementById('idp-phase').value.trim();
+    if (!phase) return;
+    idpData.push({
+      id:     nextIdpId++,
+      done:   false,
+      phase,
+      cat:    document.getElementById('idp-cat').value.trim(),
+      date:   document.getElementById('idp-date').value,
+      res:    document.getElementById('idp-res').value.trim(),
+      mentor: document.getElementById('idp-mentor').value.trim(),
+      notes:  document.getElementById('idp-notes').value.trim(),
+      status: document.getElementById('idp-status').value,
+    });
+    ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('idp-status').value = 'Not Started';
+    renderAll();
+  }
+
+  function delIdp(id) {
+    idpData = idpData.filter(x => x.id !== id);
+    renderAll();
+  }
+
+  /* ── DASHBOARD ─────────────────────────────────────────── */
+  function renderDashboard() {
+    // Stats
+    const total   = todoData.length;
+    const done    = todoData.filter(t => t.done).length;
+    const ongoing = todoData.filter(t => t.status === 'In Progress').length;
+    const idpDone = idpData.filter(t => t.done).length;
+    const idpPct  = idpData.length ? Math.round(idpDone / idpData.length * 100) : 0;
+
+    document.getElementById('stat-total').textContent   = total;
+    document.getElementById('stat-done').textContent    = done;
+    document.getElementById('stat-ongoing').textContent = ongoing;
+    document.getElementById('stat-idp').textContent     = idpPct + '%';
+
+    // Daily overview — first 4 todos
+    const overview = document.getElementById('daily-overview');
+    if (!overview) return;
+    const sample = todoData.slice(0, 4);
+    overview.innerHTML = sample.map(t => {
+      const pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
+      return `
+        <div class="daily-card">
+          <div class="task-name">${esc(t.name)}</div>
+          <div class="progress-bar">
+            <div class="progress-fill ${pct === 100 ? 'done' : ''}" style="width:${pct}%"></div>
+          </div>
+          <div class="pct">${pct}% Done</div>
+        </div>`;
+    }).join('');
+
+    // Roadmap
+    const roadmap = document.getElementById('roadmap-visual');
+    if (!roadmap) return;
+    const firstActive = idpData.findIndex(t => !t.done);
+    roadmap.innerHTML = idpData.map((t, i) => {
+      let cls = '';
+      if (t.done) cls = 'done';
+      else if (i === firstActive) cls = 'active';
+      return `
+        <div class="roadmap-step ${cls}">
+          <div class="step-dot">${i + 1}</div>
+          <div class="step-label">${esc(t.phase)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ── UTILS ─────────────────────────────────────────────── */
+  function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
 </script>
 </body>
 </html>
