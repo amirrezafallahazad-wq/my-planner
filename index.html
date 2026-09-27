@@ -1,862 +1,403 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amirreza's Planner</title>
+  <!-- آیکون‌های Lucide جهت ظاهر جذاب‌تر -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
+    /* ------------ Variables & Base Style ------------ */
     :root {
-      --bg:        oklch(14% 0.01 260);
-      --surface:   oklch(19% 0.015 260);
-      --raised:    oklch(24% 0.018 260);
-      --border:    oklch(32% 0.02  260);
-      --muted:     oklch(55% 0.02  260);
-      --text:      oklch(92% 0.01  260);
-      --accent:    oklch(62% 0.19  250);
-      --accent-hi: oklch(72% 0.19  250);
-      --success:   oklch(62% 0.18  155);
-      --warning:   oklch(72% 0.18   85);
-      --danger:    oklch(60% 0.22   25);
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --shadow:    0 2px 12px oklch(0% 0 0 / .35);
+      --bg-main: #0B0F17;
+      --bg-sidebar: #111827;
+      --bg-card: #1F2937;
+      --accent: #3B82F6;
+      --accent-hover: #2563EB;
+      --text-main: #F9FAFB;
+      --text-muted: #9CA3AF;
+      --border-color: #374151;
+      --sidebar-width: 260px;
+      --sidebar-collapsed-width: 70px;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* LOGIN */
-    #login-screen {
+      background-color: var(--bg-main);
+      color: var(--text-main);
       display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: radial-gradient(ellipse at 50% 40%,
-        oklch(22% 0.05 260) 0%, var(--bg) 70%);
-    }
-
-    .login-box {
-      background: oklch(20% 0.02 260 / .85);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px 36px;
-      width: 360px;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-
-    .login-box h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .login-box p.subtitle {
-      font-size: .875rem;
-      color: var(--muted);
-      margin-bottom: 28px;
-    }
-
-    .login-box input {
-      width: 100%;
-      padding: 11px 14px;
-      margin-bottom: 14px;
-      background: var(--raised);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-size: .9rem;
-      outline: none;
-      transition: border-color .15s;
-    }
-
-    .login-box input:focus { border-color: var(--accent); }
-
-    .login-box button {
-      width: 100%;
-      padding: 11px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: .95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, transform .1s;
-    }
-
-    .login-box button:hover  { background: var(--accent-hi); }
-    .login-box button:active { transform: scale(.98); }
-
-    #login-error {
-      color: var(--danger);
-      font-size: .82rem;
-      margin-top: 10px;
-      min-height: 18px;
-    }
-
-    /* APP */
-    #app { display: none; }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 28px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    header .brand {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--accent-hi);
-    }
-
-    header nav { display: flex; gap: 4px; }
-
-    header nav button {
-      background: none;
-      border: none;
-      color: var(--muted);
-      padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      font-size: .875rem;
-      cursor: pointer;
-      transition: color .15s, background .15s;
-    }
-
-    header nav button:hover,
-    header nav button.active {
-      color: var(--text);
-      background: var(--raised);
-    }
-
-    #logout-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 5px 14px;
-      border-radius: var(--radius-sm);
-      font-size: .8rem;
-      cursor: pointer;
-      transition: color .15s, border-color .15s;
-    }
-    #logout-btn:hover { color: var(--danger); border-color: var(--danger); }
-
-    main { padding: 28px; max-width: 1200px; margin: 0 auto; }
-
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* STATS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .stat-card .label {
-      font-size: .78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 8px;
-    }
-
-    .stat-card .value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent-hi);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .stat-card .meta {
-      font-size: .8rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 14px;
-    }
-
-    /* DAILY */
-    .daily-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .daily-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-    }
-
-    .daily-card .task-name {
-      font-size: .88rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: var(--raised);
-      border-radius: 99px;
+      height: 100vh;
       overflow: hidden;
-      margin-bottom: 6px;
     }
 
-    .progress-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 99px;
-      transition: width .4s ease;
-    }
-
-    .progress-fill.done { background: var(--success); }
-
-    .daily-card .pct {
-      font-size: .78rem;
-      color: var(--muted);
-    }
-
-    /* TABLE */
-    .table-wrapper {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .875rem;
-    }
-
-    thead th {
-      background: var(--raised);
-      padding: 11px 14px;
-      text-align: left;
-      font-size: .75rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      border-bottom: 1px solid var(--border);
-    }
-
-    tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--raised); }
-
-    td { padding: 10px 14px; vertical-align: middle; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 9px;
-      border-radius: 99px;
-      font-size: .73rem;
-      font-weight: 600;
-    }
-
-    .badge-done        { background: oklch(62% .18 155 / .18); color: var(--success); }
-    .badge-ongoing     { background: oklch(62% .19 250 / .18); color: var(--accent-hi); }
-    .badge-pending     { background: oklch(72% .18  85 / .18); color: var(--warning); }
-    .badge-not-started { background: oklch(55% .02 260 / .18); color: var(--muted); }
-
-    .btn-del {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--muted);
-      padding: 3px 9px;
-      border-radius: var(--radius-sm);
-      font-size: .78rem;
-      cursor: pointer;
-      transition: color .15s, border-color .15s;
-    }
-    .btn-del:hover { color: var(--danger); border-color: var(--danger); }
-
-    /* ADD FORM */
-    .add-form {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      margin-bottom: 20px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-    }
-
-    .add-form label {
+    /* ------------ Sidebar ------------ */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      font-size: .8rem;
-      color: var(--muted);
-    }
-
-    .add-form input,
-    .add-form select,
-    .add-form textarea {
-      background: var(--raised);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      padding: 8px 11px;
-      font-size: .875rem;
-      outline: none;
-      transition: border-color .15s;
-      font-family: inherit;
-    }
-
-    .add-form input:focus,
-    .add-form select:focus,
-    .add-form textarea:focus { border-color: var(--accent); }
-
-    .add-form select option { background: var(--raised); }
-    .add-form textarea { resize: vertical; min-height: 64px; }
-
-    .btn-add {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 9px 22px;
-      font-size: .875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, transform .1s;
-      width: fit-content;
-    }
-    .btn-add:hover  { background: var(--accent-hi); }
-    .btn-add:active { transform: scale(.98); }
-
-    /* ROADMAP */
-    .roadmap-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 28px 24px 20px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-    }
-
-    .roadmap {
-      display: flex;
-      align-items: flex-start;
-      overflow-x: auto;
-      padding-bottom: 8px;
-    }
-
-    .roadmap-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 140px;
+      transition: width 0.3s ease;
+      z-index: 10;
       position: relative;
     }
 
-    .roadmap-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      width: 100%;
-      height: 2px;
-      background: var(--border);
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed-width);
     }
 
-    .roadmap-step.done::after   { background: var(--success); }
-    .roadmap-step.active::after { background: var(--accent); }
+    .sidebar-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+    }
 
-    .step-dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar.collapsed .brand-title {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: .8rem;
-      font-weight: 700;
-      z-index: 1;
-      border: 2px solid var(--border);
-      background: var(--surface);
-      color: var(--muted);
+      padding: 5px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
     }
 
-    .roadmap-step.done   .step-dot { background: var(--success); border-color: var(--success); color: #fff; }
-    .roadmap-step.active .step-dot { background: var(--warning); border-color: var(--warning); color: #000; box-shadow: 0 0 0 4px oklch(72% .18 85 / .25); }
-
-    .step-label {
-      margin-top: 10px;
-      font-size: .75rem;
-      color: var(--muted);
-      text-align: center;
-      max-width: 110px;
+    .toggle-btn:hover {
+      background-color: var(--bg-card);
+      color: var(--text-main);
     }
 
-    .roadmap-step.done   .step-label { color: var(--success); }
-    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }
+    /* Sidebar Navigation */
+    .sidebar-nav {
+      flex: 1;
+      padding: 15px 10px;
+      overflow-y: auto;
+    }
 
-    input[type="checkbox"] {
-      accent-color: var(--accent);
-      width: 15px;
-      height: 15px;
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 5px;
       cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      user-select: none;
     }
 
-    ::-webkit-scrollbar { height: 6px; width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    .nav-item:hover, .nav-item.active {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+    }
+
+    .nav-item.active {
+      border-left: 3px solid var(--accent);
+    }
+
+    .nav-item .icon {
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-item .text {
+      flex: 1;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar.collapsed .nav-item .text,
+    .sidebar.collapsed .arrow {
+      opacity: 0;
+      width: 0;
+      display: none;
+    }
+
+    /* Accordion Styles */
+    .accordion-header {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-item.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 20px;
+    }
+
+    .sidebar.collapsed .accordion-content {
+      display: none;
+    }
+
+    .sub-nav-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      border-radius: 6px;
+      margin-bottom: 3px;
+      transition: all 0.2s;
+    }
+
+    .sub-nav-item:hover {
+      color: var(--accent);
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    /* ------------ Main Content Area ------------ */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    header {
+      padding: 20px 30px;
+      background-color: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .content-body {
+      padding: 30px;
+      flex: 1;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <h2>Amirreza's Planner</h2>
-    <p class="subtitle">Sign in to continue</p>
-    <input type="text"     id="username" placeholder="Username" autocomplete="username" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-    <button onclick="doLogin()">Log In</button>
-    <div id="login-error"></div>
-  </div>
-</div>
+  <!-- ------------ SIDEBAR ------------ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="brand-title">Amirreza's Planner</span>
+      <button class="toggle-btn" id="toggle-btn" title="Toggle Sidebar">
+        <i data-lucide="panel-left-close" id="toggle-icon"></i>
+      </button>
+    </div>
 
-<!-- APP -->
-<div id="app">
-  <header>
-    <span class="brand">Amirreza's Planner</span>
-    <nav>
-      <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
-      <button onclick="showPage('todo', this)">To-Do</button>
-      <button onclick="showPage('idp', this)">IDP</button>
+    <nav class="sidebar-nav">
+      <!-- Dashboard -->
+      <div class="nav-item active" onclick="switchView('dashboard', this)">
+        <span class="icon"><i data-lucide="layout-dashboard"></i></span>
+        <span class="text">Dashboard</span>
+      </div>
+
+      <!-- To-Do Accordion -->
+      <div class="accordion-item" id="todo-accordion">
+        <button class="nav-item accordion-header" onclick="toggleAccordion('todo-accordion')">
+          <span class="icon"><i data-lucide="check-square"></i></span>
+          <span class="text">To-Do</span>
+          <i data-lucide="chevron-down" class="arrow"></i>
+        </button>
+        <div class="accordion-content">
+          <a class="sub-nav-item" onclick="switchView('todo-today', this)">• Today's Tasks</a>
+          <a class="sub-nav-item" onclick="switchView('todo-projects', this)">• Projects</a>
+        </div>
+      </div>
+
+      <!-- IDP Accordion -->
+      <div class="accordion-item" id="idp-accordion">
+        <button class="nav-item accordion-header" onclick="toggleAccordion('idp-accordion')">
+          <span class="icon"><i data-lucide="target"></i></span>
+          <span class="text">IDP</span>
+          <i data-lucide="chevron-down" class="arrow"></i>
+        </button>
+        <div class="accordion-content">
+          <a class="sub-nav-item" onclick="switchView('idp-add', this)">• Add IDP Phase</a>
+          <a class="sub-nav-item" onclick="switchView('idp-roadmap', this)">• Roadmap & Goals</a>
+        </div>
+      </div>
     </nav>
-    <button id="logout-btn" onclick="doLogout()">Log out</button>
-  </header>
+  </aside>
 
-  <main>
-    <!-- DASHBOARD -->
-    <div id="page-dashboard" class="page active">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="label">Total Tasks</div>
-          <div class="value" id="stat-total">0</div>
-          <div class="meta">across all lists</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Completed</div>
-          <div class="value" id="stat-done">0</div>
-          <div class="meta">tasks done</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">In Progress</div>
-          <div class="value" id="stat-ongoing">0</div>
-          <div class="meta">tasks ongoing</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">IDP Progress</div>
-          <div class="value" id="stat-idp">0%</div>
-          <div class="meta">phases complete</div>
-        </div>
+  <!-- ------------ MAIN CONTENT ------------ -->
+  <main class="main-content">
+    <header>
+      <h1 class="page-title" id="page-title">Dashboard</h1>
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.9rem;">Supabase Connected 🟢</span>
       </div>
+    </header>
 
-      <div class="section-title">Daily Overview</div>
-      <div class="daily-grid" id="daily-overview"></div>
-
-      <div class="roadmap-wrap">
-        <div class="section-title">IDP Roadmap</div>
-        <div class="roadmap" id="roadmap-visual"></div>
-      </div>
-    </div>
-
-    <!-- TO-DO -->
-    <div id="page-todo" class="page">
-      <div class="section-title">Add Task</div>
-      <div class="add-form">
-        <div class="form-row">
-          <label>Task Name
-            <input type="text" id="todo-name" placeholder="e.g. Review PRs" />
-          </label>
-          <label>Deadline
-            <input type="date" id="todo-deadline" />
-          </label>
-          <label>Status
-            <select id="todo-status">
-              <option value="Not Started">Not Started</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
+    <div class="content-body">
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="view-section active">
+        <div class="card">
+          <h2>Welcome back, Amirreza!</h2>
+          <p style="color: var(--text-muted); margin-top: 8px;">
+            اینجا داشبورد اصلی شماست. خلاصه پیشرفت‌ها و آمار کارها در این بخش قرار می‌گیره.
+          </p>
         </div>
-        <label>Description
-          <textarea id="todo-desc" placeholder="Optional notes…"></textarea>
-        </label>
-        <button class="btn-add" onclick="addTodo()">+ Add Task</button>
-      </div>
+      </section>
 
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Done</th>
-              <th>Task</th>
-              <th>Description</th>
-              <th>Deadline</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="todo-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- IDP -->
-    <div id="page-idp" class="page">
-      <div class="section-title">Add IDP Phase</div>
-      <div class="add-form">
-        <div class="form-row">
-          <label>Phase / Step
-            <input type="text" id="idp-phase" placeholder="e.g. Learn Docker" />
-          </label>
-          <label>Category
-            <input type="text" id="idp-cat" placeholder="e.g. Technical" />
-          </label>
-          <label>Target Date
-            <input type="date" id="idp-date" />
-          </label>
-          <label>Status
-            <select id="idp-status">
-              <option value="Not Started">Not Started</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
+      <!-- To-Do Today View -->
+      <section id="view-todo-today" class="view-section">
+        <div class="card">
+          <h2>Today's Tasks</h2>
+          <p style="color: var(--text-muted); margin-top: 8px;">لیست کارهای امروز...</p>
         </div>
-        <div class="form-row">
-          <label>Resources
-            <input type="text" id="idp-res" placeholder="Books, courses, links…" />
-          </label>
-          <label>Mentor / Support
-            <input type="text" id="idp-mentor" placeholder="Name or team" />
-          </label>
-          <label>Notes
-            <input type="text" id="idp-notes" placeholder="Any extra notes" />
-          </label>
-        </div>
-        <button class="btn-add" onclick="addIdp()">+ Add Phase</button>
-      </div>
+      </section>
 
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Done</th>
-              <th>Phase / Step</th>
-              <th>Category</th>
-              <th>Target Date</th>
-              <th>Resources</th>
-              <th>Mentor</th>
-              <th>Notes</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="idp-tbody"></tbody>
-        </table>
-      </div>
+      <!-- To-Do Projects View -->
+      <section id="view-todo-projects" class="view-section">
+        <div class="card">
+          <h2>Projects</h2>
+          <p style="color: var(--text-muted); margin-top: 8px;">لیست پروژه‌ها و برنامه‌ها...</p>
+        </div>
+      </section>
+
+      <!-- IDP Add Phase View -->
+      <section id="view-idp-add" class="view-section">
+        <div class="card">
+          <h2>Add IDP Phase</h2>
+          <p style="color: var(--text-muted); margin-top: 8px;">فرم ثبت فاز جدید توسعه فردی (IDP)...</p>
+        </div>
+      </section>
+
+      <!-- IDP Roadmap View -->
+      <section id="view-idp-roadmap" class="view-section">
+        <div class="card">
+          <h2>Roadmap & Goals</h2>
+          <p style="color: var(--text-muted); margin-top: 8px;">نمایش نقشه راه و اهداف فردی...</p>
+        </div>
+      </section>
     </div>
   </main>
-</div>
 
-<script>
-  /* ── AUTH ── */
-  const CREDENTIALS = { user: 'amirreza', pass: '1234' };
+  <!-- ------------ JAVASCRIPT ------------ -->
+  <script>
+    // رندر اولیه آیکون‌ها
+    lucide.createIcons();
 
-  function checkAuth() {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      renderAll();
-    }
-  }
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-btn');
 
-  function doLogin() {
-    const u = document.getElementById('username').value.trim();
-    const p = document.getElementById('password').value;
-    if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
-      localStorage.setItem('isLoggedIn', 'true');
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      renderAll();
-    } else {
-      document.getElementById('login-error').textContent = 'Incorrect username or password.';
-    }
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' &&
-        document.getElementById('login-screen').style.display !== 'none') {
-      doLogin();
-    }
-  });
-
-  function doLogout() {
-    localStorage.removeItem('isLoggedIn');
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('login-error').textContent = '';
-  }
-
-  /* ── DATA STORAGE ── */
-  const defaultTodos = [
-    { id: 1, done: false, name: 'Prepare weekly report',   desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
-    { id: 2, done: false, name: 'Team standup notes',      desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
-    { id: 3, done: true,  name: 'Update onboarding docs',  desc: '',                deadline: '2026-09-20', status: 'Done'         },
-    { id: 4, done: false, name: 'Fix login redirect bug',  desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
-  ];
-
-  const defaultIdp = [
-    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                 status: 'Done'        },
-    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',          status: 'In Progress' },
-    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                 status: 'Not Started' },
-    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',   notes: '',                 status: 'Not Started' }
-  ];
-
-  var todoData = JSON.parse(localStorage.getItem('planner_todos')) || defaultTodos;
-  var idpData = JSON.parse(localStorage.getItem('planner_idp')) || defaultIdp;
-
-  function saveData() {
-    localStorage.setItem('planner_todos', JSON.stringify(todoData));
-    localStorage.setItem('planner_idp', JSON.stringify(idpData));
-  }
-
-  /* ── NAV ── */
-  function showPage(name, btn) {
-    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-    document.querySelectorAll('header nav button').forEach(function(b) { b.classList.remove('active'); });
-    document.getElementById('page-' + name).classList.add('active');
-    btn.classList.add('active');
-    renderAll();
-  }
-
-  /* ── RENDER ── */
-  function renderAll() {
-    renderTodo();
-    renderIdp();
-    renderDashboard();
-  }
-
-  function statusBadge(s) {
-    var map = {
-      'Done':        'badge-done',
-      'In Progress': 'badge-ongoing',
-      'Not Started': 'badge-not-started',
-      'Pending':     'badge-pending'
-    };
-    return '<span class="badge ' + (map[s] || 'badge-not-started') + '">' + s + '</span>';
-  }
-
-  function esc(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  /* ── TO-DO ── */
-  function renderTodo() {
-    var tbody = document.getElementById('todo-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = todoData.map(function(t) {
-      return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
-        '<td style="font-weight:600">' + esc(t.name) + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.desc) + '</td>' +
-        '<td style="font-variant-numeric:tabular-nums">' + (t.deadline || '—') + '</td>' +
-        '<td>' + statusBadge(t.status) + '</td>' +
-        '<td><button class="btn-del" onclick="delTodo(' + t.id + ')">Remove</button></td>' +
-        '</tr>';
-    }).join('');
-  }
-
-  function toggleTodo(id) {
-    var t = todoData.find(function(x) { return x.id === id; });
-    if (t) {
-      t.done = !t.done;
-      if (t.done) t.status = 'Done';
-      saveData();
-      renderAll();
-    }
-  }
-
-  function addTodo() {
-    var name = document.getElementById('todo-name').value.trim();
-    if (!name) return;
-    todoData.push({
-      id:        Date.now(),
-      done:      false,
-      name:      name,
-      desc:      document.getElementById('todo-desc').value.trim(),
-      deadline:  document.getElementById('todo-deadline').value,
-      status:    document.getElementById('todo-status').value
-    });
-    document.getElementById('todo-name').value     = '';
-    document.getElementById('todo-desc').value     = '';
-    document.getElementById('todo-deadline').value = '';
-    document.getElementById('todo-status').value   = 'Not Started';
-    saveData();
-    renderAll();
-  }
-
-  function delTodo(id) {
-    todoData = todoData.filter(function(x) { return x.id !== id; });
-    saveData();
-    renderAll();
-  }
-
-  /* ── IDP ── */
-  function renderIdp() {
-    var tbody = document.getElementById('idp-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = idpData.map(function(t) {
-      return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
-        '<td style="font-weight:600">' + esc(t.phase) + '</td>' +
-        '<td>' + esc(t.cat) + '</td>' +
-        '<td style="font-variant-numeric:tabular-nums">' + (t.date || '—') + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.res) + '</td>' +
-        '<td>' + esc(t.mentor) + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.notes) + '</td>' +
-        '<td>' + statusBadge(t.status) + '</td>' +
-        '<td><button class="btn-del" onclick="delIdp(' + t.id + ')">Remove</button></td>' +
-        '</tr>';
-    }).join('');
-  }
-
-  function toggleIdp(id) {
-    var t = idpData.find(function(x) { return x.id === id; });
-    if (t) {
-      t.done = !t.done;
-      if (t.done) t.status = 'Done';
-      saveData();
-      renderAll();
-    }
-  }
-
-  function addIdp() {
-    var phase = document.getElementById('idp-phase').value.trim();
-    if (!phase) return;
-    idpData.push({
-      id:     Date.now(),
-      done:   false,
-      phase:  phase,
-      cat:    document.getElementById('idp-cat').value.trim(),
-      date:   document.getElementById('idp-date').value,
-      res:    document.getElementById('idp-res').value.trim(),
-      mentor: document.getElementById('idp-mentor').value.trim(),
-      notes:  document.getElementById('idp-notes').value.trim(),
-      status: document.getElementById('idp-status').value
-    });
-    ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(function(id) {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('idp-status').value = 'Not Started';
-    saveData();
-    renderAll();
-  }
-
-  function delIdp(id) {
-    idpData = idpData.filter(function(x) { return x.id !== id; });
-    saveData();
-    renderAll();
-  }
-
-  /* ── DASHBOARD ── */
-  function renderDashboard() {
-    var total   = todoData.length;
-    var done    = todoData.filter(function(t) { return t.done; }).length;
-    var ongoing = todoData.filter(function(t) { return t.status === 'In Progress'; }).length;
-    var idpDone = idpData.filter(function(t) { return t.done; }).length;
-    var idpPct  = idpData.length ? Math.round(idpDone / idpData.length * 100) : 0;
-
-    document.getElementById('stat-total').textContent   = total;
-    document.getElementById('stat-done').textContent    = done;
-    document.getElementById('stat-ongoing').textContent = ongoing;
-    document.getElementById('stat-idp').textContent     = idpPct + '%';
-
-    var overview = document.getElementById('daily-overview');
-    if (overview) {
-      overview.innerHTML = todoData.slice(0, 4).map(function(t) {
-        var pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
-        return '<div class="daily-card">' +
-          '<div class="task-name">' + esc(t.name) + '</div>' +
-          '<div class="progress-bar"><div class="progress-fill ' + (pct === 100 ? 'done' : '') + '" style="width:' + pct + '%"></div></div>' +
-          '<div class="pct">' + pct + '% Done</div>' +
-          '</div>';
-      }).join('');
-    }
-
-    var roadmap = document.getElementById('roadmap-visual');
-    if (roadmap) {
-      var firstActive = -1;
-      for (var i = 0; i < idpData.length; i++) {
-        if (!idpData[i].done) { firstActive = i; break; }
+    // باز و بسته کردن سایدبار اصلی
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      
+      // بستن تمام آکاردئون‌ها موقع جمع شدن سایدبار
+      if (sidebar.classList.contains('collapsed')) {
+        document.querySelectorAll('.accordion-item').forEach(item => {
+          item.classList.remove('open');
+          item.querySelector('.accordion-content').style.maxHeight = null;
+        });
       }
-      roadmap.innerHTML = idpData.map(function(t, i) {
-        var cls = t.done ? 'done' : (i === firstActive ? 'active' : '');
-        return '<div class="roadmap-step ' + cls + '">' +
-          '<div class="step-dot">' + (i + 1) + '</div>' +
-          '<div class="step-label">' + esc(t.phase) + '</div>' +
-          '</div>';
-      }).join('');
-    }
-  }
+    });
 
-  // Check login status on page load
-  checkAuth();
-</script>
+    // مدیریت باز/بسته شدن آکاردئون‌های To-Do و IDP
+    function toggleAccordion(id) {
+      if (sidebar.classList.contains('collapsed')) {
+        sidebar.classList.remove('collapsed');
+      }
+
+      const item = document.getElementById(id);
+      const content = item.querySelector('.accordion-content');
+      
+      const isOpen = item.classList.contains('open');
+
+      // بستن بقیه آکاردئون‌ها (در صورت نیاز)
+      document.querySelectorAll('.accordion-item').forEach(acc => {
+        acc.classList.remove('open');
+        acc.querySelector('.accordion-content').style.maxHeight = null;
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    }
+
+    // سوئیچ بین بخش‌های مختلف (SPA View Switcher)
+    function switchView(viewName, element) {
+      // غیرفعال کردن تمامی بخش‌ها
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+      // فعال‌سازی بخش انتخاب‌شده
+      const targetView = document.getElementById(`view-${viewName}`);
+      if (targetView) targetView.classList.add('active');
+
+      if (element && element.classList.contains('nav-item')) {
+        element.classList.add('active');
+      }
+
+      // تغییر عنوان بالای صفحه
+      const titles = {
+        'dashboard': 'Dashboard',
+        'todo-today': "Today's Tasks",
+        'todo-projects': 'Projects',
+        'idp-add': 'Add IDP Phase',
+        'idp-roadmap': 'Roadmap & Goals'
+      };
+      document.getElementById('page-title').innerText = titles[viewName] || 'Planner';
+    }
+  </script>
 </body>
 </html>
