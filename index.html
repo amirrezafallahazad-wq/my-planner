@@ -306,7 +306,7 @@
     }
     .btn-del:hover { color: var(--danger); border-color: var(--danger); }
 
-    /* ADD180M */
+    /* ADD FORM */
     .add-form {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -432,7 +432,7 @@
     }
 
     .roadmap-step.done   .step-label { color: var(--success); }
-    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }); font-weight: 600; }
+    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }
 
     input[type="checkbox"] {
       accent-color: var(--accent);
@@ -441,7 +441,7 @@
       cursor: pointer;
     }
 
-    :t: 6px; }
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
   </style>
@@ -473,7 +473,6 @@
   </header>
 
   <main>
-
     <!-- DASHBOARD -->
     <div id="page-dashboard" class="page active">
       <div class="stats-grid">
@@ -605,7 +604,6 @@
         </table>
       </div>
     </div>
-
   </main>
 </div>
 
@@ -613,10 +611,19 @@
   /* ── AUTH ── */
   const CREDENTIALS = { user: 'amirreza', pass: '1234' };
 
+  function checkAuth() {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      renderAll();
+    }
+  }
+
   function doLogin() {
     const u = document.getElementById('username').value.trim();
     const p = document.getElementById('password').value;
     if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
+      localStorage.setItem('isLoggedIn', 'true');
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       renderAll();
@@ -633,6 +640,7 @@
   });
 
   function doLogout() {
+    localStorage.removeItem('isLoggedIn');
     document.getElementById('app').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('username').value = '';
@@ -640,24 +648,29 @@
     document.getElementById('login-error').textContent = '';
   }
 
-  /* ── DATA ── */
-  var todoData = [
+  /* ── DATA STORAGE ── */
+  const defaultTodos = [
     { id: 1, done: false, name: 'Prepare weekly report',   desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
     { id: 2, done: false, name: 'Team standup notes',      desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
     { id: 3, done: true,  name: 'Update onboarding docs',  desc: '',                deadline: '2026-09-20', status: 'Done'         },
     { id: 4, done: false, name: 'Fix login redirect bug',  desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
   ];
 
-  var idpData = [
-    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',     mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                  status: 'Done'        },
-    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',           status: 'In Progress' },
-    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                  status: 'Not Started' },
-    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',    notes: '',                  status: 'Not Started' }
+  const defaultIdp = [
+    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
+    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                 status: 'Done'        },
+    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',          status: 'In Progress' },
+    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                 status: 'Not Started' },
+    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',   notes: '',                 status: 'Not Started' }
   ];
 
-  var nextTodoId = 10;
-  var nextIdpId  = 10;
+  var todoData = JSON.parse(localStorage.getItem('planner_todos')) || defaultTodos;
+  var idpData = JSON.parse(localStorage.getItem('planner_idp')) || defaultIdp;
+
+  function saveData() {
+    localStorage.setItem('planner_todos', JSON.stringify(todoData));
+    localStorage.setItem('planner_idp', JSON.stringify(idpData));
+  }
 
   /* ── NAV ── */
   function showPage(name, btn) {
@@ -711,29 +724,36 @@
 
   function toggleTodo(id) {
     var t = todoData.find(function(x) { return x.id === id; });
-    if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
+    if (t) {
+      t.done = !t.done;
+      if (t.done) t.status = 'Done';
+      saveData();
+      renderAll();
+    }
   }
 
   function addTodo() {
     var name = document.getElementById('todo-name').value.trim();
     if (!name) return;
     todoData.push({
-      id:       nextTodoId++,
-      done:     false,
-      name:     name,
-      desc:     document.getElementById('todo-desc').value.trim(),
-      deadline: document.getElementById('todo-deadline').value,
-      status:   document.getElementById('todo-status').value
+      id:        Date.now(),
+      done:      false,
+      name:      name,
+      desc:      document.getElementById('todo-desc').value.trim(),
+      deadline:  document.getElementById('todo-deadline').value,
+      status:    document.getElementById('todo-status').value
     });
     document.getElementById('todo-name').value     = '';
     document.getElementById('todo-desc').value     = '';
     document.getElementById('todo-deadline').value = '';
     document.getElementById('todo-status').value   = 'Not Started';
+    saveData();
     renderAll();
   }
 
   function delTodo(id) {
     todoData = todoData.filter(function(x) { return x.id !== id; });
+    saveData();
     renderAll();
   }
 
@@ -758,14 +778,19 @@
 
   function toggleIdp(id) {
     var t = idpData.find(function(x) { return x.id === id; });
-    if (t) { t.done = !t.done; if (t.done) t.status = 'Done'; renderAll(); }
+    if (t) {
+      t.done = !t.done;
+      if (t.done) t.status = 'Done';
+      saveData();
+      renderAll();
+    }
   }
 
   function addIdp() {
     var phase = document.getElementById('idp-phase').value.trim();
     if (!phase) return;
     idpData.push({
-      id:     nextIdpId++,
+      id:     Date.now(),
       done:   false,
       phase:  phase,
       cat:    document.getElementById('idp-cat').value.trim(),
@@ -779,11 +804,13 @@
       document.getElementById(id).value = '';
     });
     document.getElementById('idp-status').value = 'Not Started';
+    saveData();
     renderAll();
   }
 
   function delIdp(id) {
     idpData = idpData.filter(function(x) { return x.id !== id; });
+    saveData();
     renderAll();
   }
 
@@ -827,6 +854,9 @@
       }).join('');
     }
   }
+
+  // Check login status on page load
+  checkAuth();
 </script>
 </body>
 </html>
