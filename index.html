@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Amirreza's Planner</title>
+  <!-- ۱. کتابخانه Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg:        oklch(14% 0.01 260);
@@ -608,6 +610,12 @@
 </div>
 
 <script>
+  /* ── SUPABASE CONFIG ── */
+  const SUPABASE_URL = 'https://qwkibhvawnlwqszkgewv.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_BOQE1mUHDeKB_-4ObrWwtQ_OMkg25sL';
+
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   /* ── AUTH ── */
   const CREDENTIALS = { user: 'amirreza', pass: '1234' };
 
@@ -658,7 +666,7 @@
 
   const defaultIdp = [
     { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                 status: 'Done'        },
+    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',   mentor: 'Tech Lead',  notes: '',                 status: 'Done'        },
     { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',          status: 'In Progress' },
     { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                 status: 'Not Started' },
     { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',   notes: '',                 status: 'Not Started' }
