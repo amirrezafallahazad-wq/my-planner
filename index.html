@@ -1,862 +1,253 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amirreza's Planner</title>
   <style>
     :root {
-      --bg:        oklch(14% 0.01 260);
-      --surface:   oklch(19% 0.015 260);
-      --raised:    oklch(24% 0.018 260);
-      --border:    oklch(32% 0.02  260);
-      --muted:     oklch(55% 0.02  260);
-      --text:      oklch(92% 0.01  260);
-      --accent:    oklch(62% 0.19  250);
-      --accent-hi: oklch(72% 0.19  250);
-      --success:   oklch(62% 0.18  155);
-      --warning:   oklch(72% 0.18   85);
-      --danger:    oklch(60% 0.22   25);
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --shadow:    0 2px 12px oklch(0% 0 0 / .35);
+      --bg-main: #0a0d14;
+      --bg-navbar: #0f141c;
+      --bg-dropdown: #1a202c;
+      --bg-hover: #2d3748;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --accent-blue: #3b82f6;
+      --border-color: #1f2937;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
 
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      background-color: var(--bg-main);
+      color: var(--text-main);
     }
 
-    /* LOGIN */
-    #login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: radial-gradient(ellipse at 50% 40%,
-        oklch(22% 0.05 260) 0%, var(--bg) 70%);
-    }
-
-    .login-box {
-      background: oklch(20% 0.02 260 / .85);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px 36px;
-      width: 360px;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-
-    .login-box h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .login-box p.subtitle {
-      font-size: .875rem;
-      color: var(--muted);
-      margin-bottom: 28px;
-    }
-
-    .login-box input {
-      width: 100%;
-      padding: 11px 14px;
-      margin-bottom: 14px;
-      background: var(--raised);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-size: .9rem;
-      outline: none;
-      transition: border-color .15s;
-    }
-
-    .login-box input:focus { border-color: var(--accent); }
-
-    .login-box button {
-      width: 100%;
-      padding: 11px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: .95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, transform .1s;
-    }
-
-    .login-box button:hover  { background: var(--accent-hi); }
-    .login-box button:active { transform: scale(.98); }
-
-    #login-error {
-      color: var(--danger);
-      font-size: .82rem;
-      margin-top: 10px;
-      min-height: 18px;
-    }
-
-    /* APP */
-    #app { display: none; }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 28px;
-      height: 56px;
+    /* ------------ TOP NAVBAR ------------ */
+    .navbar {
+      height: 64px;
+      background-color: var(--bg-navbar);
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      padding: 0 24px;
     }
 
-    header .brand {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--accent-hi);
-    }
-
-    header nav { display: flex; gap: 4px; }
-
-    header nav button {
-      background: none;
-      border: none;
-      color: var(--muted);
-      padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      font-size: .875rem;
-      cursor: pointer;
-      transition: color .15s, background .15s;
-    }
-
-    header nav button:hover,
-    header nav button.active {
-      color: var(--text);
-      background: var(--raised);
-    }
-
-    #logout-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 5px 14px;
-      border-radius: var(--radius-sm);
-      font-size: .8rem;
-      cursor: pointer;
-      transition: color .15s, border-color .15s;
-    }
-    #logout-btn:hover { color: var(--danger); border-color: var(--danger); }
-
-    main { padding: 28px; max-width: 1200px; margin: 0 auto; }
-
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* STATS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .stat-card .label {
-      font-size: .78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 8px;
-    }
-
-    .stat-card .value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent-hi);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .stat-card .meta {
-      font-size: .8rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 14px;
-    }
-
-    /* DAILY */
-    .daily-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .daily-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-    }
-
-    .daily-card .task-name {
-      font-size: .88rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: var(--raised);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 99px;
-      transition: width .4s ease;
-    }
-
-    .progress-fill.done { background: var(--success); }
-
-    .daily-card .pct {
-      font-size: .78rem;
-      color: var(--muted);
-    }
-
-    /* TABLE */
-    .table-wrapper {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .875rem;
-    }
-
-    thead th {
-      background: var(--raised);
-      padding: 11px 14px;
-      text-align: left;
-      font-size: .75rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      border-bottom: 1px solid var(--border);
-    }
-
-    tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--raised); }
-
-    td { padding: 10px 14px; vertical-align: middle; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 9px;
-      border-radius: 99px;
-      font-size: .73rem;
-      font-weight: 600;
-    }
-
-    .badge-done        { background: oklch(62% .18 155 / .18); color: var(--success); }
-    .badge-ongoing     { background: oklch(62% .19 250 / .18); color: var(--accent-hi); }
-    .badge-pending     { background: oklch(72% .18  85 / .18); color: var(--warning); }
-    .badge-not-started { background: oklch(55% .02 260 / .18); color: var(--muted); }
-
-    .btn-del {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--muted);
-      padding: 3px 9px;
-      border-radius: var(--radius-sm);
-      font-size: .78rem;
-      cursor: pointer;
-      transition: color .15s, border-color .15s;
-    }
-    .btn-del:hover { color: var(--danger); border-color: var(--danger); }
-
-    /* ADD FORM */
-    .add-form {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      margin-bottom: 20px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-    }
-
-    .add-form label {
+    /* سمت چپ: عنوان و دکمه‌های کشویی */
+    .nav-left {
       display: flex;
-      flex-direction: column;
-      gap: 5px;
-      font-size: .8rem;
-      color: var(--muted);
-    }
-
-    .add-form input,
-    .add-form select,
-    .add-form textarea {
-      background: var(--raised);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      padding: 8px 11px;
-      font-size: .875rem;
-      outline: none;
-      transition: border-color .15s;
-      font-family: inherit;
-    }
-
-    .add-form input:focus,
-    .add-form select:focus,
-    .add-form textarea:focus { border-color: var(--accent); }
-
-    .add-form select option { background: var(--raised); }
-    .add-form textarea { resize: vertical; min-height: 64px; }
-
-    .btn-add {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 9px 22px;
-      font-size: .875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, transform .1s;
-      width: fit-content;
-    }
-    .btn-add:hover  { background: var(--accent-hi); }
-    .btn-add:active { transform: scale(.98); }
-
-    /* ROADMAP */
-    .roadmap-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 28px 24px 20px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-    }
-
-    .roadmap {
-      display: flex;
-      align-items: flex-start;
-      overflow-x: auto;
-      padding-bottom: 8px;
-    }
-
-    .roadmap-step {
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      min-width: 140px;
+      gap: 24px;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* هر آیتم منو و Dropdown */
+    .dropdown {
       position: relative;
     }
 
-    .roadmap-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      width: 100%;
-      height: 2px;
-      background: var(--border);
-    }
-
-    .roadmap-step.done::after   { background: var(--success); }
-    .roadmap-step.active::after { background: var(--accent); }
-
-    .step-dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: .8rem;
-      font-weight: 700;
-      z-index: 1;
-      border: 2px solid var(--border);
-      background: var(--surface);
-      color: var(--muted);
+      gap: 6px;
+      transition: all 0.2s ease;
     }
 
-    .roadmap-step.done   .step-dot { background: var(--success); border-color: var(--success); color: #fff; }
-    .roadmap-step.active .step-dot { background: var(--warning); border-color: var(--warning); color: #000; box-shadow: 0 0 0 4px oklch(72% .18 85 / .25); }
-
-    .step-label {
-      margin-top: 10px;
-      font-size: .75rem;
-      color: var(--muted);
-      text-align: center;
-      max-width: 110px;
+    .nav-btn:hover, .nav-btn.active {
+      color: var(--text-main);
+      background-color: var(--bg-hover);
     }
 
-    .roadmap-step.done   .step-label { color: var(--success); }
-    .roadmap-step.active .step-label { color: var(--warning); font-weight: 600; }
+    .nav-btn.active {
+      background-color: #1e293b;
+      color: var(--accent-blue);
+    }
 
-    input[type="checkbox"] {
-      accent-color: var(--accent);
-      width: 15px;
-      height: 15px;
+    .arrow-icon {
+      font-size: 0.7rem;
+      transition: transform 0.2s ease;
+    }
+
+    .dropdown.open .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    /* محتوای کشویی (Dropdown Menu) */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background-color: var(--bg-dropdown);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      min-width: 180px;
+      padding: 6px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+
+    .dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 10px 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--bg-hover);
+      color: var(--text-main);
+    }
+
+    /* سمت راست هدر (مثلاً دکمه Login یا Profile) */
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
-    ::-webkit-scrollbar { height: 6px; width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    .login-btn:hover {
+      background-color: var(--bg-hover);
+    }
+
+    /* ------------ MAIN CONTENT ------------ */
+    .main-container {
+      padding: 40px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: #111827;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+    }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <h2>Amirreza's Planner</h2>
-    <p class="subtitle">Sign in to continue</p>
-    <input type="text"     id="username" placeholder="Username" autocomplete="username" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-    <button onclick="doLogin()">Log In</button>
-    <div id="login-error"></div>
-  </div>
-</div>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <!-- سمت چپ: برند + دکمه‌ها -->
+    <div class="nav-left">
+      <a href="#" class="brand-title">Amirreza's Planner</a>
 
-<!-- APP -->
-<div id="app">
-  <header>
-    <span class="brand">Amirreza's Planner</span>
-    <nav>
-      <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
-      <button onclick="showPage('todo', this)">To-Do</button>
-      <button onclick="showPage('idp', this)">IDP</button>
-    </nav>
-    <button id="logout-btn" onclick="doLogout()">Log out</button>
+      <nav class="nav-links">
+        <!-- Dashboard -->
+        <div class="dropdown">
+          <button class="nav-btn" onclick="toggleDropdown(this)">
+            Dashboard <span class="arrow-icon">▾</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#overview" class="dropdown-item">Overview</a>
+            <a href="#analytics" class="dropdown-item">Analytics</a>
+          </div>
+        </div>
+
+        <!-- To-Do -->
+        <div class="dropdown">
+          <button class="nav-btn" onclick="toggleDropdown(this)">
+            To-Do <span class="arrow-icon">▾</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#today" class="dropdown-item">Today's Tasks</a>
+            <a href="#projects" class="dropdown-item">Projects</a>
+            <a href="#archive" class="dropdown-item">Archived</a>
+          </div>
+        </div>
+
+        <!-- IDP -->
+        <div class="dropdown">
+          <button class="nav-btn active" onclick="toggleDropdown(this)">
+            IDP <span class="arrow-icon">▾</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#add-phase" class="dropdown-item">Add IDP Phase</a>
+            <a href="#roadmap" class="dropdown-item">Roadmap</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- سمت راست -->
+    <div class="nav-right">
+      <button class="login-btn">Log in</button>
+    </div>
   </header>
 
-  <main>
-    <!-- DASHBOARD -->
-    <div id="page-dashboard" class="page active">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="label">Total Tasks</div>
-          <div class="value" id="stat-total">0</div>
-          <div class="meta">across all lists</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Completed</div>
-          <div class="value" id="stat-done">0</div>
-          <div class="meta">tasks done</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">In Progress</div>
-          <div class="value" id="stat-ongoing">0</div>
-          <div class="meta">tasks ongoing</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">IDP Progress</div>
-          <div class="value" id="stat-idp">0%</div>
-          <div class="meta">phases complete</div>
-        </div>
-      </div>
-
-      <div class="section-title">Daily Overview</div>
-      <div class="daily-grid" id="daily-overview"></div>
-
-      <div class="roadmap-wrap">
-        <div class="section-title">IDP Roadmap</div>
-        <div class="roadmap" id="roadmap-visual"></div>
-      </div>
-    </div>
-
-    <!-- TO-DO -->
-    <div id="page-todo" class="page">
-      <div class="section-title">Add Task</div>
-      <div class="add-form">
-        <div class="form-row">
-          <label>Task Name
-            <input type="text" id="todo-name" placeholder="e.g. Review PRs" />
-          </label>
-          <label>Deadline
-            <input type="date" id="todo-deadline" />
-          </label>
-          <label>Status
-            <select id="todo-status">
-              <option value="Not Started">Not Started</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
-        </div>
-        <label>Description
-          <textarea id="todo-desc" placeholder="Optional notes…"></textarea>
-        </label>
-        <button class="btn-add" onclick="addTodo()">+ Add Task</button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Done</th>
-              <th>Task</th>
-              <th>Description</th>
-              <th>Deadline</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="todo-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- IDP -->
-    <div id="page-idp" class="page">
-      <div class="section-title">Add IDP Phase</div>
-      <div class="add-form">
-        <div class="form-row">
-          <label>Phase / Step
-            <input type="text" id="idp-phase" placeholder="e.g. Learn Docker" />
-          </label>
-          <label>Category
-            <input type="text" id="idp-cat" placeholder="e.g. Technical" />
-          </label>
-          <label>Target Date
-            <input type="date" id="idp-date" />
-          </label>
-          <label>Status
-            <select id="idp-status">
-              <option value="Not Started">Not Started</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </label>
-        </div>
-        <div class="form-row">
-          <label>Resources
-            <input type="text" id="idp-res" placeholder="Books, courses, links…" />
-          </label>
-          <label>Mentor / Support
-            <input type="text" id="idp-mentor" placeholder="Name or team" />
-          </label>
-          <label>Notes
-            <input type="text" id="idp-notes" placeholder="Any extra notes" />
-          </label>
-        </div>
-        <button class="btn-add" onclick="addIdp()">+ Add Phase</button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Done</th>
-              <th>Phase / Step</th>
-              <th>Category</th>
-              <th>Target Date</th>
-              <th>Resources</th>
-              <th>Mentor</th>
-              <th>Notes</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="idp-tbody"></tbody>
-        </table>
-      </div>
+  <!-- CONTENT -->
+  <main class="main-container">
+    <div class="card">
+      <h2 style="margin-bottom: 12px;">Add IDP Phase</h2>
+      <p style="color: var(--text-muted);">محتوای اصلی برنامه در اینجا قرار می‌گیرد...</p>
     </div>
   </main>
-</div>
 
-<script>
-  /* ── AUTH ── */
-  const CREDENTIALS = { user: 'amirreza', pass: '1234' };
+  <script>
+    function toggleDropdown(button) {
+      const currentDropdown = button.closest('.dropdown');
+      
+      // بستن بقیه دراپ‌داون‌های باز
+      document.querySelectorAll('.dropdown').forEach(d => {
+        if (d !== currentDropdown) {
+          d.classList.remove('open');
+        }
+      });
 
-  function checkAuth() {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      renderAll();
-    }
-  }
-
-  function doLogin() {
-    const u = document.getElementById('username').value.trim();
-    const p = document.getElementById('password').value;
-    if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
-      localStorage.setItem('isLoggedIn', 'true');
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      renderAll();
-    } else {
-      document.getElementById('login-error').textContent = 'Incorrect username or password.';
-    }
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' &&
-        document.getElementById('login-screen').style.display !== 'none') {
-      doLogin();
-    }
-  });
-
-  function doLogout() {
-    localStorage.removeItem('isLoggedIn');
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('login-error').textContent = '';
-  }
-
-  /* ── DATA STORAGE ── */
-  const defaultTodos = [
-    { id: 1, done: false, name: 'Prepare weekly report',   desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
-    { id: 2, done: false, name: 'Team standup notes',      desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
-    { id: 3, done: true,  name: 'Update onboarding docs',  desc: '',                deadline: '2026-09-20', status: 'Done'         },
-    { id: 4, done: false, name: 'Fix login redirect bug',  desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
-  ];
-
-  const defaultIdp = [
-    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',    mentor: 'Tech Lead',  notes: '',                 status: 'Done'        },
-    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',          status: 'In Progress' },
-    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                 status: 'Not Started' },
-    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',   notes: '',                 status: 'Not Started' }
-  ];
-
-  var todoData = JSON.parse(localStorage.getItem('planner_todos')) || defaultTodos;
-  var idpData = JSON.parse(localStorage.getItem('planner_idp')) || defaultIdp;
-
-  function saveData() {
-    localStorage.setItem('planner_todos', JSON.stringify(todoData));
-    localStorage.setItem('planner_idp', JSON.stringify(idpData));
-  }
-
-  /* ── NAV ── */
-  function showPage(name, btn) {
-    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-    document.querySelectorAll('header nav button').forEach(function(b) { b.classList.remove('active'); });
-    document.getElementById('page-' + name).classList.add('active');
-    btn.classList.add('active');
-    renderAll();
-  }
-
-  /* ── RENDER ── */
-  function renderAll() {
-    renderTodo();
-    renderIdp();
-    renderDashboard();
-  }
-
-  function statusBadge(s) {
-    var map = {
-      'Done':        'badge-done',
-      'In Progress': 'badge-ongoing',
-      'Not Started': 'badge-not-started',
-      'Pending':     'badge-pending'
-    };
-    return '<span class="badge ' + (map[s] || 'badge-not-started') + '">' + s + '</span>';
-  }
-
-  function esc(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  /* ── TO-DO ── */
-  function renderTodo() {
-    var tbody = document.getElementById('todo-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = todoData.map(function(t) {
-      return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
-        '<td style="font-weight:600">' + esc(t.name) + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.desc) + '</td>' +
-        '<td style="font-variant-numeric:tabular-nums">' + (t.deadline || '—') + '</td>' +
-        '<td>' + statusBadge(t.status) + '</td>' +
-        '<td><button class="btn-del" onclick="delTodo(' + t.id + ')">Remove</button></td>' +
-        '</tr>';
-    }).join('');
-  }
-
-  function toggleTodo(id) {
-    var t = todoData.find(function(x) { return x.id === id; });
-    if (t) {
-      t.done = !t.done;
-      if (t.done) t.status = 'Done';
-      saveData();
-      renderAll();
-    }
-  }
-
-  function addTodo() {
-    var name = document.getElementById('todo-name').value.trim();
-    if (!name) return;
-    todoData.push({
-      id:        Date.now(),
-      done:      false,
-      name:      name,
-      desc:      document.getElementById('todo-desc').value.trim(),
-      deadline:  document.getElementById('todo-deadline').value,
-      status:    document.getElementById('todo-status').value
-    });
-    document.getElementById('todo-name').value     = '';
-    document.getElementById('todo-desc').value     = '';
-    document.getElementById('todo-deadline').value = '';
-    document.getElementById('todo-status').value   = 'Not Started';
-    saveData();
-    renderAll();
-  }
-
-  function delTodo(id) {
-    todoData = todoData.filter(function(x) { return x.id !== id; });
-    saveData();
-    renderAll();
-  }
-
-  /* ── IDP ── */
-  function renderIdp() {
-    var tbody = document.getElementById('idp-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = idpData.map(function(t) {
-      return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
-        '<td style="font-weight:600">' + esc(t.phase) + '</td>' +
-        '<td>' + esc(t.cat) + '</td>' +
-        '<td style="font-variant-numeric:tabular-nums">' + (t.date || '—') + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.res) + '</td>' +
-        '<td>' + esc(t.mentor) + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.notes) + '</td>' +
-        '<td>' + statusBadge(t.status) + '</td>' +
-        '<td><button class="btn-del" onclick="delIdp(' + t.id + ')">Remove</button></td>' +
-        '</tr>';
-    }).join('');
-  }
-
-  function toggleIdp(id) {
-    var t = idpData.find(function(x) { return x.id === id; });
-    if (t) {
-      t.done = !t.done;
-      if (t.done) t.status = 'Done';
-      saveData();
-      renderAll();
-    }
-  }
-
-  function addIdp() {
-    var phase = document.getElementById('idp-phase').value.trim();
-    if (!phase) return;
-    idpData.push({
-      id:     Date.now(),
-      done:   false,
-      phase:  phase,
-      cat:    document.getElementById('idp-cat').value.trim(),
-      date:   document.getElementById('idp-date').value,
-      res:    document.getElementById('idp-res').value.trim(),
-      mentor: document.getElementById('idp-mentor').value.trim(),
-      notes:  document.getElementById('idp-notes').value.trim(),
-      status: document.getElementById('idp-status').value
-    });
-    ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(function(id) {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('idp-status').value = 'Not Started';
-    saveData();
-    renderAll();
-  }
-
-  function delIdp(id) {
-    idpData = idpData.filter(function(x) { return x.id !== id; });
-    saveData();
-    renderAll();
-  }
-
-  /* ── DASHBOARD ── */
-  function renderDashboard() {
-    var total   = todoData.length;
-    var done    = todoData.filter(function(t) { return t.done; }).length;
-    var ongoing = todoData.filter(function(t) { return t.status === 'In Progress'; }).length;
-    var idpDone = idpData.filter(function(t) { return t.done; }).length;
-    var idpPct  = idpData.length ? Math.round(idpDone / idpData.length * 100) : 0;
-
-    document.getElementById('stat-total').textContent   = total;
-    document.getElementById('stat-done').textContent    = done;
-    document.getElementById('stat-ongoing').textContent = ongoing;
-    document.getElementById('stat-idp').textContent     = idpPct + '%';
-
-    var overview = document.getElementById('daily-overview');
-    if (overview) {
-      overview.innerHTML = todoData.slice(0, 4).map(function(t) {
-        var pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
-        return '<div class="daily-card">' +
-          '<div class="task-name">' + esc(t.name) + '</div>' +
-          '<div class="progress-bar"><div class="progress-fill ' + (pct === 100 ? 'done' : '') + '" style="width:' + pct + '%"></div></div>' +
-          '<div class="pct">' + pct + '% Done</div>' +
-          '</div>';
-      }).join('');
+      // باز یا بسته کردن دراپ‌داون کلیک‌شده
+      currentDropdown.classList.toggle('open');
     }
 
-    var roadmap = document.getElementById('roadmap-visual');
-    if (roadmap) {
-      var firstActive = -1;
-      for (var i = 0; i < idpData.length; i++) {
-        if (!idpData[i].done) { firstActive = i; break; }
+    // بستن دراپ‌داون در صورت کلیک روی هر جای دیگر صفحه
+    window.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
       }
-      roadmap.innerHTML = idpData.map(function(t, i) {
-        var cls = t.done ? 'done' : (i === firstActive ? 'active' : '');
-        return '<div class="roadmap-step ' + cls + '">' +
-          '<div class="step-dot">' + (i + 1) + '</div>' +
-          '<div class="step-label">' + esc(t.phase) + '</div>' +
-          '</div>';
-      }).join('');
-    }
-  }
-
-  // Check login status on page load
-  checkAuth();
-</script>
+    });
+  </script>
 </body>
 </html>
