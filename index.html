@@ -613,7 +613,6 @@
   /* ── SUPABASE CONFIG ── */
   const SUPABASE_URL = 'https://qwkibhvawnlwqszkgewv.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_BOQE1mUHDeKB_-4ObrWwtQ_OMkg25sL';
-
   const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   /* ── AUTH ── */
@@ -623,7 +622,7 @@
     if (localStorage.getItem('isLoggedIn') === 'true') {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
-      renderAll();
+      fetchData();
     }
   }
 
@@ -634,7 +633,7 @@
       localStorage.setItem('isLoggedIn', 'true');
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
-      renderAll();
+      fetchData();
     } else {
       document.getElementById('login-error').textContent = 'Incorrect username or password.';
     }
@@ -657,27 +656,17 @@
   }
 
   /* ── DATA STORAGE ── */
-  const defaultTodos = [
-    { id: 1, done: false, name: 'Prepare weekly report',   desc: 'Sales data',      deadline: '2026-09-25', status: 'In Progress' },
-    { id: 2, done: false, name: 'Team standup notes',      desc: 'Meeting summary', deadline: '2026-09-26', status: 'Not Started'  },
-    { id: 3, done: true,  name: 'Update onboarding docs',  desc: '',                deadline: '2026-09-20', status: 'Done'         },
-    { id: 4, done: false, name: 'Fix login redirect bug',  desc: 'Auth module',     deadline: '2026-09-28', status: 'In Progress'  }
-  ];
+  var todoData = [];
+  var idpData = [];
 
-  const defaultIdp = [
-    { id: 1, done: true,  phase: 'Goal Setting',        cat: 'Planning',    date: '2026-07-01', res: 'Internal docs',    mentor: 'Manager',   notes: 'Completed on time', status: 'Done'        },
-    { id: 2, done: true,  phase: 'SQL Deep Dive',        cat: 'Technical',   date: '2026-07-20', res: 'Mode Analytics',   mentor: 'Tech Lead',  notes: '',                 status: 'Done'        },
-    { id: 3, done: false, phase: 'Python for Analytics', cat: 'Technical',   date: '2026-08-15', res: 'Coursera course',   mentor: 'Tech Lead',  notes: 'Mid-way',          status: 'In Progress' },
-    { id: 4, done: false, phase: 'Storytelling & Viz',   cat: 'Soft Skills', date: '2026-09-10', res: 'Storytelling book', mentor: 'HR',         notes: '',                 status: 'Not Started' },
-    { id: 5, done: false, phase: 'Capstone Project',     cat: 'Delivery',    date: '2026-10-01', res: '',                  mentor: 'Manager',   notes: '',                 status: 'Not Started' }
-  ];
+  async function fetchData() {
+    const { data: todos } = await _supabase.from('todos').select('*').order('id', { ascending: true });
+    const { data: idps } = await _supabase.from('idp').select('*').order('id', { ascending: true });
 
-  var todoData = JSON.parse(localStorage.getItem('planner_todos')) || defaultTodos;
-  var idpData = JSON.parse(localStorage.getItem('planner_idp')) || defaultIdp;
+    if (todos) todoData = todos;
+    if (idps) idpData = idps;
 
-  function saveData() {
-    localStorage.setItem('planner_todos', JSON.stringify(todoData));
-    localStorage.setItem('planner_idp', JSON.stringify(idpData));
+    renderAll();
   }
 
   /* ── NAV ── */
@@ -730,39 +719,48 @@
     }).join('');
   }
 
-  function toggleTodo(id) {
+  async function toggleTodo(id) {
     var t = todoData.find(function(x) { return x.id === id; });
     if (t) {
-      t.done = !t.done;
-      if (t.done) t.status = 'Done';
-      saveData();
+      const newDone = !t.done;
+      const newStatus = newDone ? 'Done' : t.status;
+      
+      t.done = newDone;
+      t.status = newStatus;
       renderAll();
+
+      await _supabase.from('todos').update({ done: newDone, status: newStatus }).eq('id', id);
     }
   }
 
-  function addTodo() {
+  async function addTodo() {
     var name = document.getElementById('todo-name').value.trim();
     if (!name) return;
-    todoData.push({
-      id:        Date.now(),
+
+    var newObj = {
       done:      false,
       name:      name,
       desc:      document.getElementById('todo-desc').value.trim(),
       deadline:  document.getElementById('todo-deadline').value,
       status:    document.getElementById('todo-status').value
-    });
+    };
+
+    const { data, error } = await _supabase.from('todos').insert([newObj]).select();
+    if (data && data.length > 0) {
+      todoData.push(data[0]);
+    }
+
     document.getElementById('todo-name').value     = '';
     document.getElementById('todo-desc').value     = '';
     document.getElementById('todo-deadline').value = '';
     document.getElementById('todo-status').value   = 'Not Started';
-    saveData();
     renderAll();
   }
 
-  function delTodo(id) {
+  async function delTodo(id) {
     todoData = todoData.filter(function(x) { return x.id !== id; });
-    saveData();
     renderAll();
+    await _supabase.from('todos').delete().eq('id', id);
   }
 
   /* ── IDP ── */
@@ -784,21 +782,25 @@
     }).join('');
   }
 
-  function toggleIdp(id) {
+  async function toggleIdp(id) {
     var t = idpData.find(function(x) { return x.id === id; });
     if (t) {
-      t.done = !t.done;
-      if (t.done) t.status = 'Done';
-      saveData();
+      const newDone = !t.done;
+      const newStatus = newDone ? 'Done' : t.status;
+
+      t.done = newDone;
+      t.status = newStatus;
       renderAll();
+
+      await _supabase.from('idp').update({ done: newDone, status: newStatus }).eq('id', id);
     }
   }
 
-  function addIdp() {
+  async function addIdp() {
     var phase = document.getElementById('idp-phase').value.trim();
     if (!phase) return;
-    idpData.push({
-      id:     Date.now(),
+
+    var newObj = {
       done:   false,
       phase:  phase,
       cat:    document.getElementById('idp-cat').value.trim(),
@@ -807,19 +809,24 @@
       mentor: document.getElementById('idp-mentor').value.trim(),
       notes:  document.getElementById('idp-notes').value.trim(),
       status: document.getElementById('idp-status').value
-    });
+    };
+
+    const { data, error } = await _supabase.from('idp').insert([newObj]).select();
+    if (data && data.length > 0) {
+      idpData.push(data[0]);
+    }
+
     ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(function(id) {
       document.getElementById(id).value = '';
     });
     document.getElementById('idp-status').value = 'Not Started';
-    saveData();
     renderAll();
   }
 
-  function delIdp(id) {
+  async function delIdp(id) {
     idpData = idpData.filter(function(x) { return x.id !== id; });
-    saveData();
     renderAll();
+    await _supabase.from('idp').delete().eq('id', id);
   }
 
   /* ── DASHBOARD ── */
