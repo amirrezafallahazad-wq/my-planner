@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Amirreza's Planner</title>
-  <!-- ۱. کتابخانه Supabase -->
+  <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -660,8 +660,9 @@
   var idpData = [];
 
   async function fetchData() {
+    // خواندن داده‌ها مطابق نام جدول IDP و ستون‌های ساخته شده
     const { data: todos } = await _supabase.from('todos').select('*').order('id', { ascending: true });
-    const { data: idps } = await _supabase.from('idp').select('*').order('id', { ascending: true });
+    const { data: idps } = await _supabase.from('IDP').select('*').order('id', { ascending: true });
 
     if (todos) todoData = todos;
     if (idps) idpData = idps;
@@ -709,7 +710,7 @@
     if (!tbody) return;
     tbody.innerHTML = todoData.map(function(t) {
       return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
+        '<td><input type="checkbox" ' + (t.is_done ? 'checked' : '') + ' onchange="toggleTodo(' + t.id + ')" /></td>' +
         '<td style="font-weight:600">' + esc(t.name) + '</td>' +
         '<td style="color:var(--muted)">' + esc(t.desc) + '</td>' +
         '<td style="font-variant-numeric:tabular-nums">' + (t.deadline || '—') + '</td>' +
@@ -722,14 +723,14 @@
   async function toggleTodo(id) {
     var t = todoData.find(function(x) { return x.id === id; });
     if (t) {
-      const newDone = !t.done;
+      const newDone = !t.is_done;
       const newStatus = newDone ? 'Done' : t.status;
       
-      t.done = newDone;
+      t.is_done = newDone;
       t.status = newStatus;
       renderAll();
 
-      await _supabase.from('todos').update({ done: newDone, status: newStatus }).eq('id', id);
+      await _supabase.from('todos').update({ is_done: newDone, status: newStatus }).eq('id', id);
     }
   }
 
@@ -738,16 +739,18 @@
     if (!name) return;
 
     var newObj = {
-      done:      false,
+      is_done:   false,
       name:      name,
       desc:      document.getElementById('todo-desc').value.trim(),
-      deadline:  document.getElementById('todo-deadline').value,
+      deadline:  document.getElementById('todo-deadline').value || null,
       status:    document.getElementById('todo-status').value
     };
 
     const { data, error } = await _supabase.from('todos').insert([newObj]).select();
     if (data && data.length > 0) {
       todoData.push(data[0]);
+    } else if (error) {
+      alert("Error adding todo: " + error.message);
     }
 
     document.getElementById('todo-name').value     = '';
@@ -769,11 +772,11 @@
     if (!tbody) return;
     tbody.innerHTML = idpData.map(function(t) {
       return '<tr>' +
-        '<td><input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
-        '<td style="font-weight:600">' + esc(t.phase) + '</td>' +
-        '<td>' + esc(t.cat) + '</td>' +
-        '<td style="font-variant-numeric:tabular-nums">' + (t.date || '—') + '</td>' +
-        '<td style="color:var(--muted)">' + esc(t.res) + '</td>' +
+        '<td><input type="checkbox" ' + (t.is_done ? 'checked' : '') + ' onchange="toggleIdp(' + t.id + ')" /></td>' +
+        '<td style="font-weight:600">' + esc(t.phase_step) + '</td>' +
+        '<td>' + esc(t.category) + '</td>' +
+        '<td style="font-variant-numeric:tabular-nums">' + (t.target_date || '—') + '</td>' +
+        '<td style="color:var(--muted)">' + esc(t.resources) + '</td>' +
         '<td>' + esc(t.mentor) + '</td>' +
         '<td style="color:var(--muted)">' + esc(t.notes) + '</td>' +
         '<td>' + statusBadge(t.status) + '</td>' +
@@ -785,14 +788,14 @@
   async function toggleIdp(id) {
     var t = idpData.find(function(x) { return x.id === id; });
     if (t) {
-      const newDone = !t.done;
+      const newDone = !t.is_done;
       const newStatus = newDone ? 'Done' : t.status;
 
-      t.done = newDone;
+      t.is_done = newDone;
       t.status = newStatus;
       renderAll();
 
-      await _supabase.from('idp').update({ done: newDone, status: newStatus }).eq('id', id);
+      await _supabase.from('IDP').update({ is_done: newDone, status: newStatus }).eq('id', id);
     }
   }
 
@@ -801,19 +804,21 @@
     if (!phase) return;
 
     var newObj = {
-      done:   false,
-      phase:  phase,
-      cat:    document.getElementById('idp-cat').value.trim(),
-      date:   document.getElementById('idp-date').value,
-      res:    document.getElementById('idp-res').value.trim(),
-      mentor: document.getElementById('idp-mentor').value.trim(),
-      notes:  document.getElementById('idp-notes').value.trim(),
-      status: document.getElementById('idp-status').value
+      is_done:     false,
+      phase_step:  phase,
+      category:    document.getElementById('idp-cat').value.trim(),
+      target_date: document.getElementById('idp-date').value || null,
+      resources:   document.getElementById('idp-res').value.trim(),
+      mentor:      document.getElementById('idp-mentor').value.trim(),
+      notes:       document.getElementById('idp-notes').value.trim(),
+      status:      document.getElementById('idp-status').value
     };
 
-    const { data, error } = await _supabase.from('idp').insert([newObj]).select();
+    const { data, error } = await _supabase.from('IDP').insert([newObj]).select();
     if (data && data.length > 0) {
       idpData.push(data[0]);
+    } else if (error) {
+      alert("Error adding IDP phase: " + error.message);
     }
 
     ['idp-phase','idp-cat','idp-date','idp-res','idp-mentor','idp-notes'].forEach(function(id) {
@@ -826,15 +831,15 @@
   async function delIdp(id) {
     idpData = idpData.filter(function(x) { return x.id !== id; });
     renderAll();
-    await _supabase.from('idp').delete().eq('id', id);
+    await _supabase.from('IDP').delete().eq('id', id);
   }
 
   /* ── DASHBOARD ── */
   function renderDashboard() {
     var total   = todoData.length;
-    var done    = todoData.filter(function(t) { return t.done; }).length;
+    var done    = todoData.filter(function(t) { return t.is_done; }).length;
     var ongoing = todoData.filter(function(t) { return t.status === 'In Progress'; }).length;
-    var idpDone = idpData.filter(function(t) { return t.done; }).length;
+    var idpDone = idpData.filter(function(t) { return t.is_done; }).length;
     var idpPct  = idpData.length ? Math.round(idpDone / idpData.length * 100) : 0;
 
     document.getElementById('stat-total').textContent   = total;
@@ -845,7 +850,7 @@
     var overview = document.getElementById('daily-overview');
     if (overview) {
       overview.innerHTML = todoData.slice(0, 4).map(function(t) {
-        var pct = t.done ? 100 : (t.status === 'In Progress' ? 50 : 0);
+        var pct = t.is_done ? 100 : (t.status === 'In Progress' ? 50 : 0);
         return '<div class="daily-card">' +
           '<div class="task-name">' + esc(t.name) + '</div>' +
           '<div class="progress-bar"><div class="progress-fill ' + (pct === 100 ? 'done' : '') + '" style="width:' + pct + '%"></div></div>' +
@@ -858,13 +863,13 @@
     if (roadmap) {
       var firstActive = -1;
       for (var i = 0; i < idpData.length; i++) {
-        if (!idpData[i].done) { firstActive = i; break; }
+        if (!idpData[i].is_done) { firstActive = i; break; }
       }
       roadmap.innerHTML = idpData.map(function(t, i) {
-        var cls = t.done ? 'done' : (i === firstActive ? 'active' : '');
+        var cls = t.is_done ? 'done' : (i === firstActive ? 'active' : '');
         return '<div class="roadmap-step ' + cls + '">' +
           '<div class="step-dot">' + (i + 1) + '</div>' +
-          '<div class="step-label">' + esc(t.phase) + '</div>' +
+          '<div class="step-label">' + esc(t.phase_step) + '</div>' +
           '</div>';
       }).join('');
     }
